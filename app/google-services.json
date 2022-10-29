@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "315623262498",
+    "project_id": "chatappjetpack",
+    "storage_bucket": "chatappjetpack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315623262498:android:629a63111daf4dba19bd7b",
+        "android_client_info": {
+          "package_name": "com.example.composechatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315623262498-t289r8kgnrvl9q27r1ptfdrdmnfp9gp4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkEfkBF7-RBBOFqLTUDpKt-8N6gbiENrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315623262498-t289r8kgnrvl9q27r1ptfdrdmnfp9gp4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315623262498:android:4b265d7b371bb44919bd7b",
+        "android_client_info": {
+          "package_name": "com.example.jetpackchatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315623262498-ttpki2qd1b3jk58n38tu34832ou3hk90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jetpackchatapp",
+            "certificate_hash": "8112b1df5e0c03301bd02b44c1dc94936bcee5b9"
+          }
+        },
+        {
+          "client_id": "315623262498-t289r8kgnrvl9q27r1ptfdrdmnfp9gp4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkEfkBF7-RBBOFqLTUDpKt-8N6gbiENrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315623262498-t289r8kgnrvl9q27r1ptfdrdmnfp9gp4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
