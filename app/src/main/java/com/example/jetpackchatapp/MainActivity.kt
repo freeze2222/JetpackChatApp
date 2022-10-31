@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.jetpackchatapp.ui.screens.SignInScreen
 import com.example.jetpackchatapp.ui.screens.SplashScreen
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
 import com.google.firebase.database.ChildEventListener
@@ -40,13 +41,18 @@ class MainActivity : ComponentActivity() {
             JetpackChatAppTheme {
                 // A surface container using the 'background' color from the theme
                 SplashScreen()
+                SignInScreen()
+                /*
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
+
                     ReadDatabase(ref = database)
                     WriteDatabase(ref = database)
+
                 }
+                */
             }
         }
     }

@@ -7,10 +7,16 @@ val titleData = listOf(
 )
 val descriptionData = listOf(
     "Username",
-    "Password"
+    "Password",
+    "* * * * * *",
+    "Sing In",
+    "Sing Up"
 )
 val imageData = listOf(
     R.drawable.splash_logo,
-    R.drawable.logo
-
+    R.drawable.logo,
+    R.drawable.line,
+    R.drawable.icon_user,
+    R.drawable.icon_lock,
+    R.drawable.icon_mail //5
 )
