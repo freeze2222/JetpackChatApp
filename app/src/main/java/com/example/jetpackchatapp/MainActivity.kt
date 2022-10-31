@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.jetpackchatapp.ui.screens.SignInScreen
 import com.example.jetpackchatapp.ui.screens.SplashScreen
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
@@ -33,7 +32,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
         database = Firebase.database.reference
         //database.child("users").child("user04").setValue("user_changed")
 

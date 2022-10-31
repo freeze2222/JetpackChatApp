@@ -61,7 +61,7 @@ fun EditText(hint: String,
             },
             modifier = Modifier
                 .padding(start = padding_start)
-                .height(45.dp)
+                .height(52.dp)
                 .width(327.dp)
                 .onFocusChanged { focus ->
                     focusState = focus.isFocused

@@ -19,6 +19,7 @@ import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatButton
 import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.EditText
+import com.example.jetpackchatapp.ui.views.Separator
 
 @Composable
 fun SignInScreen() {
@@ -59,7 +60,7 @@ fun SignInScreen() {
                     Spacer(modifier = Modifier.height(35.dp))
                     ChatText(text = descriptionData[0], fontFamily = regularFont, size = 18.sp)
                     Spacer(modifier = Modifier.height(16.dp))
-                    EditText(hint = "freeze2222", isPassword = false) {
+                    EditText(hint = descriptionData[7], isPassword = false) {
                         Image(
                             painter = painterResource(id = imageData[3]),
                             contentDescription = null,
@@ -69,13 +70,7 @@ fun SignInScreen() {
                         )
                     }
                     Spacer(modifier = Modifier.height(21.dp))
-                    Image(
-                        painter = painterResource(id = imageData[2]),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(2.dp)
-                    )
+                    Separator()
                     Spacer(modifier = Modifier.height(21.dp))
                     ChatText(text = descriptionData[1], fontFamily = regularFont, size = 18.sp)
                     Spacer(modifier = Modifier.height(16.dp))
