@@ -18,6 +18,7 @@ fun ChatText(
     color: Color = Color.White,
     size: TextUnit = 24.sp,
     padding_start: Dp = 38.dp,
+    padding_end: Dp = 0.dp,
     fontFamily: FontFamily = regularFont,
 ) {
     Text(
@@ -25,6 +26,6 @@ fun ChatText(
         color = color,
         fontSize = size,
         fontFamily = fontFamily,
-        modifier = Modifier.padding(start = padding_start),
+        modifier = Modifier.padding(start = padding_start, end = padding_end),
     )
 }

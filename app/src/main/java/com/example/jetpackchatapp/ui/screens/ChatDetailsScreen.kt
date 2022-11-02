@@ -13,17 +13,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackchatapp.R
 import com.example.jetpackchatapp.model.data.boldFont
+import com.example.jetpackchatapp.model.data.descriptionData
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.repository.getMessagesListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatText
+import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
 
 @Composable
@@ -92,16 +95,51 @@ fun ChatDetailsScreen() {
             Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    //.fillMaxSize()
+                    .fillMaxHeight()
                     .clip(RoundedCornerShape(48.dp, 48.dp, 0.dp, 0.dp))
                     .background(
                         LightPurple
                     )
             ) {
+                Spacer(modifier = Modifier.height(45.dp))
                 val items = getMessagesListData()
-                LazyColumn{
-                    items(items = items){item ->
+                LazyColumn {
+                    items(items = items) { item ->
                         Message(data = item)
+                    }
+                }
+                Spacer(modifier = Modifier.height(40.dp))
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                ) {
+                    EditText(
+                        hint = descriptionData[9],
+                        isPassword = false,
+                        hint_size = 18.sp,
+                        width = 270.dp,
+                        height = 57.dp
+                    ) {}
+                    Spacer(modifier = Modifier.width(8.dp))
+                    IconButton(
+                        onClick = { /*TODO*/ }, modifier = Modifier
+                            .width(60.dp)
+                            .height(60.dp)
+                            .clip(
+                                CircleShape
+                            )
+                            .background(Color.White)
+                    ) {
+                        Image(
+                            painter = painterResource(id = imageData[8]),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .height(30.dp)
+                                .width(30.dp)
+                                .clip(CircleShape)
+                        )
                     }
                 }
             }

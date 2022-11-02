@@ -15,7 +15,8 @@ val descriptionData = listOf(
     "Email", //5
     "freeze2222@gmail.com",
     "freeze2222",
-    "Password Again"
+    "Password Again",
+    "Type a message"
 )
 val imageData = listOf(
     R.drawable.splash_logo,
@@ -25,5 +26,6 @@ val imageData = listOf(
     R.drawable.icon_lock,
     R.drawable.icon_mail, //5
     R.drawable.small_logo,
-    R.drawable.icon_arrow
+    R.drawable.icon_arrow,
+    R.drawable.paper_plane
 )

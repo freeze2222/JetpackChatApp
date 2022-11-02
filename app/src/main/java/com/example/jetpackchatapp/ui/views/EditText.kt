@@ -18,13 +18,17 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun EditText(hint: String,
              isPassword: Boolean,
+             height: Dp = 52.dp,
              padding_start: Dp = 18.dp,
+             hint_size: TextUnit = 12.sp,
+             width: Dp = 327.dp,
              trailing_icon: @Composable () -> Unit
 ) {
     Column(
@@ -56,13 +60,13 @@ fun EditText(hint: String,
                 Text(
                     text = if (focusState) "" else hint,
                     color = Gray,
-                    fontSize = 12.sp
+                    fontSize = hint_size
                 )
             },
             modifier = Modifier
                 .padding(start = padding_start)
-                .height(52.dp)
-                .width(327.dp)
+                .height(height)
+                .width(width)
                 .onFocusChanged { focus ->
                     focusState = focus.isFocused
                 },
