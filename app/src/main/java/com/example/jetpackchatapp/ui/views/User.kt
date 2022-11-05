@@ -54,7 +54,7 @@ fun User(data: ChatModel) {
                 Column(
                     Modifier
                         .background(LightPurple)
-                        .sizeIn(maxWidth = 250.dp)
+                        .sizeIn(maxWidth = 230.dp)
                 ) {
                     ChatText(text = data.name, fontFamily = boldFont, size = 20.sp)
                     Spacer(modifier = Modifier.height(2.dp))

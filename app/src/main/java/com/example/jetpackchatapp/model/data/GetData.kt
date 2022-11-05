@@ -29,5 +29,6 @@ val imageData = listOf(
     R.drawable.small_logo,
     R.drawable.icon_arrow,
     R.drawable.paper_plane,
-    R.drawable.no_avatar
+    R.drawable.no_avatar,
+    R.drawable.icon_message, //10
 )
