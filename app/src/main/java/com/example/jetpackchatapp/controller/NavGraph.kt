@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.ui.screens.ChatsScreen
 import com.example.jetpackchatapp.ui.screens.ContactsScreen
+import com.example.jetpackchatapp.ui.screens.ProfileScreen
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
@@ -18,7 +19,7 @@ fun SetupNavGraph(navController: NavHostController) {
             ContactsScreen()
         }
         composable(route = Screen.Profile.route){
-            //TODO
+            ProfileScreen()
         }
     }
 }

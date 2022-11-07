@@ -5,7 +5,10 @@ import com.example.jetpackchatapp.R
 val titleData = listOf(
     "Sign In To Your Account",
     "Create a Account",
-    "Chats"
+    "Chats",
+    "Contacts",
+    "Settings",
+    "Account Settings" //5
 )
 val descriptionData = listOf(
     "Username",
@@ -17,7 +20,10 @@ val descriptionData = listOf(
     "freeze2222@gmail.com",
     "freeze2222",
     "Password Again",
-    "Type a message"
+    "Type a message",
+    "Online", //10
+    "Account",
+    "Log Out"
 )
 val imageData = listOf(
     R.drawable.splash_logo,
@@ -31,4 +37,6 @@ val imageData = listOf(
     R.drawable.paper_plane,
     R.drawable.no_avatar,
     R.drawable.icon_message, //10
+    R.drawable.user_icon_yellow,
+    R.drawable.icon_power
 )

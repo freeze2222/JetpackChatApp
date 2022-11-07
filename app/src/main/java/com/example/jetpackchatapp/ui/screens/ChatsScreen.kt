@@ -10,13 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
-import com.example.jetpackchatapp.repository.getUsersListData
+import com.example.jetpackchatapp.repository.getChatsListData
+import com.example.jetpackchatapp.repository.getContactListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
+import com.example.jetpackchatapp.ui.views.Chat
 import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.User
 
@@ -43,10 +47,11 @@ fun ChatsScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(46.dp))
-                val items = getUsersListData()
+                val items = getChatsListData()
+                Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
                     items(items = items) { item ->
-                        User(data = item)
+                        Chat(data = item)
                     }
                 }
             }
@@ -62,4 +67,10 @@ fun ChatsScreen() {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun ChatsScreenPreview() {
+    ChatsScreen()
 }
