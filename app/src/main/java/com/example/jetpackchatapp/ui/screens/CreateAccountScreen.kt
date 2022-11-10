@@ -17,10 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
-import com.example.jetpackchatapp.ui.views.ChatButton
-import com.example.jetpackchatapp.ui.views.ChatText
-import com.example.jetpackchatapp.ui.views.EditText
-import com.example.jetpackchatapp.ui.views.Separator
+import com.example.jetpackchatapp.ui.views.*
 
 @Composable
 fun CreateAccountScreen() {
@@ -89,13 +86,7 @@ fun CreateAccountScreen() {
                 ChatText(text = descriptionData[5], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 EditText(hint = descriptionData[6], isPassword = false) {
-                    Image(
-                        painter = painterResource(id = imageData[5]),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(21.dp)
-                            .height(17.dp)
-                    )
+                    TextImageView(id = imageData[5])
                 }
                 Spacer(modifier = Modifier.height(18.dp))
                 Separator()
@@ -103,13 +94,7 @@ fun CreateAccountScreen() {
                 ChatText(text = descriptionData[1], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 EditText(hint = descriptionData[2], isPassword = true) {
-                    Image(
-                        painter = painterResource(id = imageData[4]),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(21.dp)
-                            .height(17.dp)
-                    )
+                    TextImageView(id = imageData[4])
                 }
                 Spacer(modifier = Modifier.height(18.dp))
                 Separator()
@@ -117,13 +102,7 @@ fun CreateAccountScreen() {
                 ChatText(text = descriptionData[8], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 EditText(hint = descriptionData[2], isPassword = true) {
-                    Image(
-                        painter = painterResource(id = imageData[4]),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(21.dp)
-                            .height(17.dp)
-                    )
+                    TextImageView(id = imageData[4])
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 ChatButton(text = descriptionData[4]) { TODO() }

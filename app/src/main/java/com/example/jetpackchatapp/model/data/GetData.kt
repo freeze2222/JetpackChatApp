@@ -23,7 +23,8 @@ val descriptionData = listOf(
     "Type a message",
     "Online", //10
     "Account",
-    "Log Out"
+    "Log Out",
+    "Update Profile"
 )
 val imageData = listOf(
     R.drawable.splash_logo,

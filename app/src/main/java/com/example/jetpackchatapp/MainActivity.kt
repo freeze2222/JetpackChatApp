@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.jetpackchatapp.ui.screens.MainScreen
 import com.example.jetpackchatapp.ui.screens.SignInScreen
 import com.example.jetpackchatapp.ui.screens.SplashScreen
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
@@ -38,8 +39,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JetpackChatAppTheme {
                 // A surface container using the 'background' color from the theme
-                SplashScreen()
-                SignInScreen()
+                MainScreen()
                 /*
                 Surface(
                     modifier = Modifier.fillMaxSize(),

@@ -16,10 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
-import com.example.jetpackchatapp.ui.views.ChatButton
-import com.example.jetpackchatapp.ui.views.ChatText
-import com.example.jetpackchatapp.ui.views.EditText
-import com.example.jetpackchatapp.ui.views.Separator
+import com.example.jetpackchatapp.ui.views.*
 
 @Composable
 fun SignInScreen() {
@@ -61,13 +58,7 @@ fun SignInScreen() {
                     ChatText(text = descriptionData[0], fontFamily = regularFont, size = 18.sp)
                     Spacer(modifier = Modifier.height(16.dp))
                     EditText(hint = descriptionData[7], isPassword = false) {
-                        Image(
-                            painter = painterResource(id = imageData[3]),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(17.dp)
-                                .height(19.dp)
-                        )
+                        TextImageView(id = imageData[3])
                     }
                     Spacer(modifier = Modifier.height(21.dp))
                     Separator()
@@ -75,13 +66,7 @@ fun SignInScreen() {
                     ChatText(text = descriptionData[1], fontFamily = regularFont, size = 18.sp)
                     Spacer(modifier = Modifier.height(16.dp))
                     EditText(hint = descriptionData[2], isPassword = true) {
-                        Image(
-                            painter = painterResource(id = imageData[4]),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(18.dp)
-                                .height(20.dp)
-                        )
+                        TextImageView(id = imageData[4])
                     }
                     Spacer(modifier = Modifier.height(35.dp))
                     ChatButton(text = descriptionData[3]) { TODO() }
