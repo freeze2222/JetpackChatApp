@@ -14,13 +14,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.jetpackchatapp.model.data.*
+import com.example.jetpackchatapp.model.navigation.Screen
+import com.example.jetpackchatapp.repository.createAccount
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.*
 
 @Composable
-fun CreateAccountScreen() {
+fun CreateAccountScreen(navController: NavController) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -55,7 +59,9 @@ fun CreateAccountScreen() {
                         .height(30.dp),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Image(
                             painter = painterResource(id = imageData[7]),
                             contentDescription = null,
@@ -105,14 +111,10 @@ fun CreateAccountScreen() {
                     TextImageView(id = imageData[4])
                 }
                 Spacer(modifier = Modifier.height(20.dp))
-                ChatButton(text = descriptionData[4]) { TODO() }
+                ChatButton(text = descriptionData[4]) {
+                    createAccount(navController)
+                }
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun CreateAccountScreenPreview() {
-    CreateAccountScreen()
 }

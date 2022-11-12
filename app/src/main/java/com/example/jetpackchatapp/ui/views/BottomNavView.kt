@@ -42,14 +42,14 @@ fun BottomNavigationBar(navController: NavController) {
             BottomNavigationItem(
                 icon = {
                     Icon(
-                        painterResource(id = item.icon),
+                        painterResource(id = item.icon!!),
                         contentDescription = item.title,
                         modifier = Modifier
                             .padding(bottom = 5.dp, top = 10.dp)
                             .size(20.dp)
                     )
                 },
-                label = { Text(text = item.title) },
+                label = { Text(text = item.title!!) },
                 selectedContentColor = Color.White,
                 unselectedContentColor = Color.White.copy(0.4f),
                 alwaysShowLabel = true,

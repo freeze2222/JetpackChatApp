@@ -1,13 +1,18 @@
 package com.example.jetpackchatapp.repository
 
+import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.model.UserModel
+import com.example.jetpackchatapp.model.navigation.Screen
 
 
 fun getMessagesListData(): List<MessageModel> {
     return listOf(
-        MessageModel(text = "TestFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", "Freeze2222"),
+        MessageModel(
+            text = "TestFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+            "Freeze2222"
+        ),
         MessageModel(text = "TestFFFFFFFFFFFFFFFFFFFFFFF", "Freeze2222"),
         MessageModel(text = "TestFFFFFFFFFFFFF", "Test1"),
         MessageModel(text = "TestFFFFFFFFFFFFFFFFFFFFFFF", "Freeze2222"),
@@ -25,8 +30,25 @@ fun getChatsListData(): List<ChatModel> {
     )
 }
 
-fun getContactListData(): List<UserModel>{
+fun getContactListData(): List<UserModel> {
     return listOf(
-        UserModel("User1","Test1","#0000",null,"00:12")
+        UserModel("User1", "Test1", "#0000", null, "00:12")
     )
+}
+
+fun login(navController: NavController) {
+    //TODO
+    navController.navigate(Screen.Main.route) {
+        popUpTo(Screen.SignIn.route) {
+            inclusive = true
+        }
+    }
+}
+
+fun createAccount(navController: NavController) {
+    //TODO
+    navController.navigate(Screen.Main.route){
+        popUpTo(0)
+    }
+
 }

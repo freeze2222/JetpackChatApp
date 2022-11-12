@@ -18,15 +18,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
 import com.example.jetpackchatapp.model.data.*
+import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.Separator
+import com.google.firebase.auth.FirebaseAuth
+import kotlin.system.exitProcess
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Purple
@@ -83,6 +87,9 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .padding(start = 24.dp)
                         .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(Screen.Account.route)
+                        }
                 ) {
                     Image(
                         painter = painterResource(id = imageData[11]),
@@ -100,7 +107,12 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .padding(start = 24.dp)
                         .fillMaxWidth()
-                        .clickable { Log.e("Deb","Click") }
+                        .clickable {
+                            FirebaseAuth
+                                .getInstance()
+                                .signOut()
+                            exitProcess(0)
+                        }
                 ) {
                     Image(
                         painter = painterResource(id = imageData[12]),
@@ -114,10 +126,4 @@ fun ProfileScreen() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen()
 }

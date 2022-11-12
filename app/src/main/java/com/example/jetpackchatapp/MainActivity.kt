@@ -17,9 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.jetpackchatapp.ui.screens.MainScreen
+import com.example.jetpackchatapp.ui.screens.OnBoardingScreen
 import com.example.jetpackchatapp.ui.screens.SignInScreen
 import com.example.jetpackchatapp.ui.screens.SplashScreen
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -38,8 +40,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             JetpackChatAppTheme {
-                // A surface container using the 'background' color from the theme
-                MainScreen()
+                if (FirebaseAuth.getInstance().currentUser != null) {
+                    MainScreen()
+                } else {
+                    OnBoardingScreen()
+                }
+                //MainScreen()
                 /*
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -54,7 +60,9 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     var users = mutableStateListOf<String>()
+
     @Composable
     private fun ReadDatabase(ref: DatabaseReference) {
         val myRef = ref.child("messages")
@@ -88,11 +96,12 @@ class MainActivity : ComponentActivity() {
         })
 
     }
+
     @Composable
     fun WriteDatabase(ref: DatabaseReference) {
         val child = ref.child("messages")
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd){
-            Button(onClick = {child.push().setValue("messages")}) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+            Button(onClick = { child.push().setValue("messages") }) {
                 Text(text = "Отправить")
             }
         }
