@@ -16,10 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.jetpackchatapp.ui.screens.MainScreen
-import com.example.jetpackchatapp.ui.screens.OnBoardingScreen
-import com.example.jetpackchatapp.ui.screens.SignInScreen
-import com.example.jetpackchatapp.ui.screens.SplashScreen
+import com.example.jetpackchatapp.ui.screens.*
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -40,11 +37,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             JetpackChatAppTheme {
-                if (FirebaseAuth.getInstance().currentUser != null) {
-                    MainScreen()
-                } else {
-                    OnBoardingScreen()
-                }
+                //if (FirebaseAuth.getInstance().currentUser != null) {
+                  //  FrameScreen()
+                //} else {
+                  //  OnBoardingScreen()
+                //}
+                FrameScreen()
                 //MainScreen()
                 /*
                 Surface(

@@ -9,6 +9,7 @@ sealed class Screen(var route: String, var icon: Int?, var title: String?) {
     object SignIn : Screen("signIn", null,null)
     object SignUp : Screen("signUp", null,null)
     object Main : Screen("main", null,null)
+    object MainFrame : Screen("mainFrame", null,null)
     object Account : Screen("account", null,null)
     object OnBoarding : Screen("onBoarding", null,null)
 }

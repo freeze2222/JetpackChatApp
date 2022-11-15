@@ -13,7 +13,7 @@ import com.example.jetpackchatapp.model.navigation.Screen
 fun OnBoardingScreen() {
         Scaffold {
             val controller = rememberNavController()
-            SetupNavGraph(navController = controller)
+            SetupNavGraph(navController = controller,)
             controller.navigate(Screen.SignIn.route){
                 popUpTo(0) {}
             }

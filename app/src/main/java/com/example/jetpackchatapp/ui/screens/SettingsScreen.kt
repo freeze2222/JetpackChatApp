@@ -111,7 +111,9 @@ fun ProfileScreen(navController: NavController) {
                             FirebaseAuth
                                 .getInstance()
                                 .signOut()
-                            exitProcess(0)
+                            navController.navigate(Screen.SignIn.route){
+                                navController.popBackStack()
+                            }
                         }
                 ) {
                     Image(

@@ -40,7 +40,7 @@ fun AccountSettingsScreen() {
         {
             Spacer(modifier = Modifier.height(30.dp))
             Row {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {  }) {
                     Image(
                         painter = painterResource(id = imageData[7]),
                         contentDescription = null,
