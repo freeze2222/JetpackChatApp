@@ -19,10 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackchatapp.R
+import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.descriptionData
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.repository.getMessagesListData
+import com.example.jetpackchatapp.repository.isUserOnline
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatText
@@ -30,7 +32,7 @@ import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
 
 @Composable
-fun ChatDetailsScreen() {
+fun ChatDetailsScreen(userModel: UserModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -74,12 +76,16 @@ fun ChatDetailsScreen() {
                         .background(Purple)
                 ) {
                     ChatText(
-                        "Enes Zenler",
+                        userModel.name,
                         fontFamily = boldFont,
                         size = 18.sp,
                         padding_start = 0.dp
                     )
-                    ChatText("Online", size = 16.sp, padding_start = 0.dp)
+                    ChatText(
+                        text = if (isUserOnline(userModel)) "Online" else "Offline",
+                        size = 16.sp,
+                        padding_start = 0.dp
+                    )
                 }
                 Spacer(modifier = Modifier.width(90.dp))
                 IconButton(onClick = { /*TODO*/ }) {
@@ -95,7 +101,6 @@ fun ChatDetailsScreen() {
             Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier
-                    //.fillMaxSize()
                     .fillMaxHeight()
                     .clip(RoundedCornerShape(48.dp, 48.dp, 0.dp, 0.dp))
                     .background(
@@ -103,7 +108,7 @@ fun ChatDetailsScreen() {
                     )
             ) {
                 Spacer(modifier = Modifier.height(45.dp))
-                val items = getMessagesListData()
+                val items = getMessagesListData(userModel)
                 LazyColumn {
                     items(items = items) { item ->
                         Message(data = item)
@@ -145,11 +150,4 @@ fun ChatDetailsScreen() {
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-fun ChatDetailsScreenPreview() {
-    ChatDetailsScreen()
 }

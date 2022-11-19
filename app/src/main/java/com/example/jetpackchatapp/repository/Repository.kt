@@ -5,9 +5,10 @@ import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.navigation.Screen
+import java.util.*
 
 
-fun getMessagesListData(): List<MessageModel> {
+fun getMessagesListData(userModel: UserModel): List<MessageModel> {
     return listOf(
         MessageModel(
             text = "TestFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
@@ -47,8 +48,11 @@ fun login(navController: NavController) {
 
 fun createAccount(navController: NavController) {
     //TODO
-    navController.navigate(Screen.Main.route){
+    navController.navigate(Screen.Main.route) {
         popUpTo(0)
     }
+}
 
+fun isUserOnline(userModel: UserModel): Boolean {
+    return userModel.lastSeen.toLong() - Calendar.getInstance().time.time < 0
 }

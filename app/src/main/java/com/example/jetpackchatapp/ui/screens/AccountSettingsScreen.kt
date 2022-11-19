@@ -17,17 +17,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.descriptionData
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.model.data.titleData
+import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.*
 
 @Composable
-fun AccountSettingsScreen() {
+fun AccountSettingsScreen(controller: NavController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Purple
@@ -40,7 +42,9 @@ fun AccountSettingsScreen() {
         {
             Spacer(modifier = Modifier.height(30.dp))
             Row {
-                IconButton(onClick = {  }) {
+                IconButton(onClick = {
+                    controller.popBackStack()
+                }) {
                     Image(
                         painter = painterResource(id = imageData[7]),
                         contentDescription = null,
@@ -116,10 +120,4 @@ fun AccountSettingsScreen() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun AccountSettingsScreenPreview() {
-    AccountSettingsScreen()
 }

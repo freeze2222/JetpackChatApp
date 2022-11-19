@@ -11,23 +11,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.bundleOf
+import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.imageData
+import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.repository.getChatsListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 
 @Composable
-fun Chat(data: ChatModel) {
+fun Chat(data: ChatModel, navController: NavController) {
     Surface(
         modifier = Modifier
             .padding(bottom = 11.dp)
             .fillMaxSize()
-            .background(LightPurple).clickable {  }
+            .background(LightPurple).clickable {
+                val bundle = bundleOf(
+
+                )
+                navController.navigate(Screen.ChatDetails.route)
+            }
     ) {
         Column(
             modifier = Modifier
@@ -92,10 +99,4 @@ fun Chat(data: ChatModel) {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun ChatPreview() {
-    Chat(data = getChatsListData()[0])
 }

@@ -10,22 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jetpackchatapp.model.ChatModel
+import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
 import com.example.jetpackchatapp.repository.getChatsListData
-import com.example.jetpackchatapp.repository.getContactListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.Chat
 import com.example.jetpackchatapp.ui.views.ChatText
-import com.example.jetpackchatapp.ui.views.User
 
 @Composable
-fun ChatsScreen() {
+fun ChatsScreen(navController:NavController) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +48,7 @@ fun ChatsScreen() {
                 Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
                     items(items = items) { item ->
-                        Chat(data = item)
+                        Chat(data = item, navController)
                     }
                 }
             }
@@ -67,10 +64,4 @@ fun ChatsScreen() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun ChatsScreenPreview() {
-    ChatsScreen()
 }
