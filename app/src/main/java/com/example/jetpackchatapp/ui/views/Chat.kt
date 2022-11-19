@@ -13,7 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.data.boldFont
@@ -30,10 +29,8 @@ fun Chat(data: ChatModel, navController: NavController) {
             .padding(bottom = 11.dp)
             .fillMaxSize()
             .background(LightPurple).clickable {
-                val bundle = bundleOf(
 
-                )
-                navController.navigate(Screen.ChatDetails.route)
+                navController.navigate(Screen.ChatDetails.route, )
             }
     ) {
         Column(
