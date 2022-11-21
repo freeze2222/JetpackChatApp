@@ -10,5 +10,5 @@ import com.google.firebase.auth.FirebaseAuth
 fun FrameScreen(viewModel: ViewModel) {
     val navController = rememberNavController()
     val isLogged = FirebaseAuth.getInstance().currentUser!=null
-    SetupNavGraph(navController = navController, navController, true, viewModel,isLogged)
+    SetupNavGraph(navController = navController, navFrameController = navController, true, viewModel,isLogged)
 }

@@ -15,7 +15,7 @@ fun SetupNavGraph(
     navController: NavHostController,
     navFrameController: NavHostController? = null,
     isFrame: Boolean = false,
-    viewModel: ViewModel? = null,
+    viewModel: ViewModel,
     isLogged: Boolean = false
 ) {
     NavHost(
@@ -23,7 +23,7 @@ fun SetupNavGraph(
         startDestination = if (!isFrame) Screen.Chats.route else if (isLogged) Screen.Main.route else Screen.OnBoarding.route
     ) {
         composable(route = Screen.Chats.route) {
-            ChatsScreen(navFrameController!!, viewModel!!)
+            ChatsScreen(navFrameController!!, viewModel)
         }
         composable(route = Screen.Contacts.route) {
             ContactsScreen()
@@ -32,10 +32,10 @@ fun SetupNavGraph(
             ProfileScreen(navFrameController!!)
         }
         composable(route = Screen.SignIn.route) {
-            SignInScreen(navController = navController)
+            SignInScreen(navController = navController, viewModel)
         }
         composable(route = Screen.Main.route) {
-            MainScreen(navFrameController, viewModel!!)
+            if (navFrameController != null) MainScreen(navFrameController, viewModel)
         }
         composable(route = Screen.SignUp.route) {
             CreateAccountScreen(navController)
@@ -44,13 +44,10 @@ fun SetupNavGraph(
             AccountSettingsScreen(navFrameController!!)
         }
         composable(route = Screen.OnBoarding.route) {
-            OnBoardingScreen()
-        }
-        composable(route = Screen.MainFrame.route) {
-            //FrameScreen()
+            OnBoardingScreen(viewModel, navFrameController!!)
         }
         composable(route = Screen.ChatDetails.route) {
-            ChatDetailsScreen(viewModel!!, navFrameController!!)
+            ChatDetailsScreen(viewModel, navFrameController!!)
         }
     }
 }

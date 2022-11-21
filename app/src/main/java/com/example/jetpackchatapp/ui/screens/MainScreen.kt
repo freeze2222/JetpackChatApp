@@ -16,7 +16,7 @@ import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.BottomNavigationBar
 
 @Composable
-fun MainScreen(navFrameController: NavHostController?, viewModel: ViewModel) {
+fun MainScreen(navFrameController: NavHostController, viewModel: ViewModel) {
     val navController = rememberNavController()
     Scaffold(
         topBar = {},

@@ -23,7 +23,7 @@ import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.*
 
 @Composable
-fun SignInScreen(navController: NavController) {
+fun SignInScreen(navController: NavController, viewModel: ViewModel) {
     Surface(
         modifier = Modifier
             .background(Purple)

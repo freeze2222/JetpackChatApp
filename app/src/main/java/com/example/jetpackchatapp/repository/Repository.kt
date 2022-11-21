@@ -5,6 +5,7 @@ import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.navigation.Screen
+import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
 
@@ -62,7 +63,7 @@ fun getContactListData(): List<UserModel> {
 }
 
 fun login(navController: NavController) {
-    //TODO
+    FirebaseAuth.getInstance().signInWithEmailAndPassword("","")
     navController.navigate(Screen.Main.route) {
         popUpTo(Screen.SignIn.route) {
             inclusive = true
