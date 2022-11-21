@@ -25,6 +25,10 @@ import com.example.jetpackchatapp.ui.views.*
 
 @Composable
 fun CreateAccountScreen(navController: NavController) {
+    val usernameViewModel = ViewModel()
+    val passwordViewModel = ViewModel()
+    val email = ViewModel()
+    val passwordConfirmationViewModel = ViewModel()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -70,14 +74,19 @@ fun CreateAccountScreen(navController: NavController) {
                                 .height(30.dp)
                         )
                     }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        ChatText(text = titleData[1], fontFamily = boldFont, size = 20.sp, padding_start = 0.dp)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    ChatText(
+                        text = titleData[1],
+                        fontFamily = boldFont,
+                        size = 20.sp,
+                        padding_start = 0.dp
+                    )
 
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 ChatText(text = descriptionData[0], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(12.dp))
-                EditText(hint = descriptionData[7], isPassword = false) {
+                EditText(hint = descriptionData[7], isPassword = false, viewModel = usernameViewModel) {
                     Image(
                         painter = painterResource(id = imageData[3]),
                         contentDescription = null,
@@ -91,7 +100,7 @@ fun CreateAccountScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 ChatText(text = descriptionData[5], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
-                EditText(hint = descriptionData[6], isPassword = false) {
+                EditText(hint = descriptionData[6], isPassword = false, viewModel = email) {
                     TextImageView(id = imageData[5])
                 }
                 Spacer(modifier = Modifier.height(18.dp))
@@ -99,7 +108,11 @@ fun CreateAccountScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 ChatText(text = descriptionData[1], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
-                EditText(hint = descriptionData[2], isPassword = true) {
+                EditText(
+                    hint = descriptionData[2],
+                    isPassword = true,
+                    viewModel = passwordViewModel
+                ) {
                     TextImageView(id = imageData[4])
                 }
                 Spacer(modifier = Modifier.height(18.dp))
@@ -107,7 +120,11 @@ fun CreateAccountScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 ChatText(text = descriptionData[8], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
-                EditText(hint = descriptionData[2], isPassword = true) {
+                EditText(
+                    hint = descriptionData[2],
+                    isPassword = true,
+                    viewModel = passwordConfirmationViewModel
+                ) {
                     TextImageView(id = imageData[4])
                 }
                 Spacer(modifier = Modifier.height(20.dp))

@@ -14,4 +14,8 @@ class ViewModel(var text: String = "") {
     fun setModel(data: ChatModel) {
         chatModel = data
     }
+    @JvmName("setText1")
+    fun setText(text:String){
+        this.text = text
+    }
 }

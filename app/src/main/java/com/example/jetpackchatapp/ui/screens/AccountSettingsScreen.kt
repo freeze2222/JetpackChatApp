@@ -19,10 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
-import com.example.jetpackchatapp.model.data.boldFont
-import com.example.jetpackchatapp.model.data.descriptionData
-import com.example.jetpackchatapp.model.data.imageData
-import com.example.jetpackchatapp.model.data.titleData
+import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
@@ -30,6 +27,10 @@ import com.example.jetpackchatapp.ui.views.*
 
 @Composable
 fun AccountSettingsScreen(controller: NavController) {
+    val usernameViewModel = ViewModel()
+    val passwordViewModel = ViewModel()
+    var username: String
+    var password: String
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Purple
@@ -93,7 +94,12 @@ fun AccountSettingsScreen(controller: NavController) {
                     Spacer(modifier = Modifier.height(20.dp))
                     ChatText(text = descriptionData[0])
                     Spacer(modifier = Modifier.height(8.dp))
-                    EditText(hint = descriptionData[7], isPassword = false) {
+
+                    EditText(
+                        hint = descriptionData[7],
+                        isPassword = false,
+                        viewModel = usernameViewModel
+                    ) {
                         TextImageView(id = imageData[3])
                     }
                     Spacer(modifier = Modifier.height(21.dp))
@@ -101,7 +107,11 @@ fun AccountSettingsScreen(controller: NavController) {
                     Spacer(modifier = Modifier.height(13.dp))
                     ChatText(text = descriptionData[5])
                     Spacer(modifier = Modifier.height(8.dp))
-                    EditText(hint = descriptionData[6], isPassword = false) {
+                    EditText(
+                        hint = descriptionData[6],
+                        isPassword = false,
+                        viewModel = usernameViewModel
+                    ) {
                         TextImageView(id = imageData[5])
                     }
                     Spacer(modifier = Modifier.height(29.dp))
@@ -109,12 +119,16 @@ fun AccountSettingsScreen(controller: NavController) {
                     Spacer(modifier = Modifier.height(21.dp))
                     ChatText(text = descriptionData[1])
                     Spacer(modifier = Modifier.height(8.dp))
-                    EditText(hint = descriptionData[2], isPassword = true) {
+                    EditText(
+                        hint = descriptionData[2], isPassword = true,
+                        viewModel = passwordViewModel
+                    ) {
                         TextImageView(id = imageData[4])
                     }
                     Spacer(modifier = Modifier.height(26.dp))
                     ChatButton(text = descriptionData[13]) {
-                        
+                        username = usernameViewModel.getText()
+                        password = passwordViewModel.getText()
                     }
                 }
             }

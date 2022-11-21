@@ -21,9 +21,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.jetpackchatapp.model.data.ViewModel
 
 @Composable
-fun EditText(hint: String,
+fun EditText(viewModel: ViewModel,
+             hint: String,
              isPassword: Boolean,
              height: Dp = 52.dp,
              padding_start: Dp = 18.dp,
@@ -41,7 +43,7 @@ fun EditText(hint: String,
         var focusState by remember {
             mutableStateOf(false)
         }
-
+        viewModel.setText(text)
         OutlinedTextField(
             value = text,
             onValueChange = {

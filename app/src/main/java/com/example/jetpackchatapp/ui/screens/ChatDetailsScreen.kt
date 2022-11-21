@@ -33,6 +33,8 @@ import com.example.jetpackchatapp.ui.views.Message
 
 @Composable
 fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
+    val messageViewModel = ViewModel()
+    var text : String
     val chatModel = data.chatModel!!
     Surface(
         modifier = Modifier
@@ -132,7 +134,8 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                         isPassword = false,
                         hint_size = 18.sp,
                         width = 270.dp,
-                        height = 57.dp
+                        height = 57.dp,
+                        viewModel = messageViewModel
                     ) {}
                     Spacer(modifier = Modifier.width(8.dp))
                     IconButton(

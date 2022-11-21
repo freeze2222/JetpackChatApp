@@ -63,7 +63,7 @@ fun getContactListData(): List<UserModel> {
 }
 
 fun login(navController: NavController) {
-    FirebaseAuth.getInstance().signInWithEmailAndPassword("","")
+    //FirebaseAuth.getInstance().signInWithEmailAndPassword("","")
     navController.navigate(Screen.Main.route) {
         popUpTo(Screen.SignIn.route) {
             inclusive = true
