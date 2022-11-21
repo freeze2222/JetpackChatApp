@@ -10,19 +10,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.jetpackchatapp.controller.SetupNavGraph
+import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.BottomNavigationBar
 
 @Composable
-fun MainScreen(navFrameController: NavHostController?) {
+fun MainScreen(navFrameController: NavHostController?, viewModel: ViewModel) {
     val navController = rememberNavController()
     Scaffold(
         topBar = {},
         bottomBar = { BottomNavigationBar(navController) },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                SetupNavGraph(navController = navController, navFrameController, false)
+                SetupNavGraph(navController = navController, navFrameController, false, viewModel)
             }
         },
         backgroundColor = LightPurple

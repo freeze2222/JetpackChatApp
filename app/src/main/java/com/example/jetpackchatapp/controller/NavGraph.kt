@@ -11,44 +11,46 @@ import com.example.jetpackchatapp.ui.screens.*
 
 
 @Composable
-    fun SetupNavGraph(
-        navController: NavHostController,
-        navFrameController: NavHostController? = null,
-        isFrame: Boolean = false,
+fun SetupNavGraph(
+    navController: NavHostController,
+    navFrameController: NavHostController? = null,
+    isFrame: Boolean = false,
+    viewModel: ViewModel? = null,
+    isLogged: Boolean = false
+) {
+    NavHost(
+        navController = navController,
+        startDestination = if (!isFrame) Screen.Chats.route else if (isLogged) Screen.Main.route else Screen.OnBoarding.route
     ) {
-        NavHost(
-            navController = navController,
-            startDestination = if (!isFrame) Screen.Chats.route else Screen.Main.route
-        ) {
-            composable(route = Screen.Chats.route) {
-                ChatsScreen(navFrameController!!)
-            }
-            composable(route = Screen.Contacts.route) {
-                ContactsScreen()
-            }
-            composable(route = Screen.Profile.route) {
-                ProfileScreen(navFrameController!!)
-            }
-            composable(route = Screen.SignIn.route) {
-                SignInScreen(navController = navController)
-            }
-            composable(route = Screen.Main.route) {
-                MainScreen(navFrameController)
-            }
-            composable(route = Screen.SignUp.route) {
-                CreateAccountScreen(navController)
-            }
-            composable(route = Screen.Account.route) {
-                AccountSettingsScreen(navFrameController!!)
-            }
-            composable(route = Screen.OnBoarding.route) {
-                OnBoardingScreen()
-            }
-            composable(route = Screen.MainFrame.route) {
-                FrameScreen()
-            }
-            composable(route = Screen.ChatDetails.route) {
-                ChatDetailsScreen()
-            }
+        composable(route = Screen.Chats.route) {
+            ChatsScreen(navFrameController!!, viewModel!!)
+        }
+        composable(route = Screen.Contacts.route) {
+            ContactsScreen()
+        }
+        composable(route = Screen.Profile.route) {
+            ProfileScreen(navFrameController!!)
+        }
+        composable(route = Screen.SignIn.route) {
+            SignInScreen(navController = navController)
+        }
+        composable(route = Screen.Main.route) {
+            MainScreen(navFrameController, viewModel!!)
+        }
+        composable(route = Screen.SignUp.route) {
+            CreateAccountScreen(navController)
+        }
+        composable(route = Screen.Account.route) {
+            AccountSettingsScreen(navFrameController!!)
+        }
+        composable(route = Screen.OnBoarding.route) {
+            OnBoardingScreen()
+        }
+        composable(route = Screen.MainFrame.route) {
+            //FrameScreen()
+        }
+        composable(route = Screen.ChatDetails.route) {
+            ChatDetailsScreen(viewModel!!, navFrameController!!)
         }
     }
+}

@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
+import com.example.jetpackchatapp.model.UserModel
+import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.model.navigation.Screen
@@ -23,14 +25,14 @@ import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 
 @Composable
-fun Chat(data: ChatModel, navController: NavController) {
+fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel) {
     Surface(
         modifier = Modifier
             .padding(bottom = 11.dp)
             .fillMaxSize()
             .background(LightPurple).clickable {
-
-                navController.navigate(Screen.ChatDetails.route, )
+                viewModel.setModel(data)
+                navController.navigate(Screen.ChatDetails.route)
             }
     ) {
         Column(
@@ -38,7 +40,7 @@ fun Chat(data: ChatModel, navController: NavController) {
                 .fillMaxSize()
                 .background(LightPurple)
         ) {
-            if (getChatsListData()[0].UID != data.UID) {
+            if (getChatsListData()[0].ChatUID != data.ChatUID) {
                 Separator()
                 Spacer(modifier = Modifier.height(11.dp))
             }

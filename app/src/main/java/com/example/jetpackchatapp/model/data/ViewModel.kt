@@ -1,9 +1,13 @@
 package com.example.jetpackchatapp.model.data
 
-import com.example.jetpackchatapp.model.UserModel
+import com.example.jetpackchatapp.model.ChatModel
 
-class ViewModel (var userModel: UserModel){
-    fun getUser(): UserModel{
-        return userModel
+class ViewModel() {
+    var chatModel: ChatModel? = null
+    fun getUser(): ChatModel {
+        return chatModel!!
+    }
+    fun setModel(data: ChatModel) {
+        chatModel = data
     }
 }

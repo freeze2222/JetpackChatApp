@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
 import com.example.jetpackchatapp.repository.getChatsListData
@@ -22,7 +23,7 @@ import com.example.jetpackchatapp.ui.views.Chat
 import com.example.jetpackchatapp.ui.views.ChatText
 
 @Composable
-fun ChatsScreen(navController:NavController) {
+fun ChatsScreen(navController:NavController, viewModel: ViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +49,7 @@ fun ChatsScreen(navController:NavController) {
                 Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
                     items(items = items) { item ->
-                        Chat(data = item, navController)
+                        Chat(data = item, navController, viewModel = viewModel)
                     }
                 }
             }

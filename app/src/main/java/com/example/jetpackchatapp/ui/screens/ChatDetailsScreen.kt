@@ -15,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
-import com.example.jetpackchatapp.model.UserModel
+import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.descriptionData
 import com.example.jetpackchatapp.model.data.imageData
@@ -32,7 +32,8 @@ import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
 
 @Composable
-fun ChatDetailsScreen(userModel: UserModel) {
+fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
+    val chatModel = data.chatModel!!
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +50,7 @@ fun ChatDetailsScreen(userModel: UserModel) {
                     .height(58.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {navController.popBackStack()}) {
                     Image(
                         painter = painterResource(id = imageData[7]),
                         contentDescription = null,
@@ -60,7 +61,13 @@ fun ChatDetailsScreen(userModel: UserModel) {
                 }
                 Spacer(modifier = Modifier.width(17.dp))
                 Image(
-                    painter = painterResource(id = R.drawable.avatar_image),
+                    painter = if (chatModel.avatar != null) {
+                        painterResource(chatModel.avatar)
+                    } else {
+                        painterResource(
+                            id = R.drawable.no_avatar
+                        )
+                    },
                     contentDescription = null,
                     modifier = Modifier
                         .clip(
@@ -76,13 +83,13 @@ fun ChatDetailsScreen(userModel: UserModel) {
                         .background(Purple)
                 ) {
                     ChatText(
-                        userModel.name,
+                        chatModel.name,
                         fontFamily = boldFont,
                         size = 18.sp,
                         padding_start = 0.dp
                     )
                     ChatText(
-                        text = if (isUserOnline(userModel)) "Online" else "Offline",
+                        text = if (isUserOnline(chatModel)) "Online" else "Offline",
                         size = 16.sp,
                         padding_start = 0.dp
                     )
@@ -108,7 +115,7 @@ fun ChatDetailsScreen(userModel: UserModel) {
                     )
             ) {
                 Spacer(modifier = Modifier.height(45.dp))
-                val items = getMessagesListData(userModel)
+                val items = getMessagesListData(chatModel)
                 LazyColumn {
                     items(items = items) { item ->
                         Message(data = item)

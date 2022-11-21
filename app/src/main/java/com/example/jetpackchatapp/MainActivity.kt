@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.ui.screens.*
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -36,25 +37,9 @@ class MainActivity : ComponentActivity() {
         //database.child("users").child("user04").setValue("user_changed")
 
         setContent {
+            val viewModel = ViewModel()
             JetpackChatAppTheme {
-                //if (FirebaseAuth.getInstance().currentUser != null) {
-                  //  FrameScreen()
-                //} else {
-                  //  OnBoardingScreen()
-                //}
-                FrameScreen()
-                //MainScreen()
-                /*
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.White
-                ) {
-
-                    ReadDatabase(ref = database)
-                    WriteDatabase(ref = database)
-
-                }
-                */
+                FrameScreen(viewModel)
             }
         }
     }

@@ -8,7 +8,7 @@ import com.example.jetpackchatapp.model.navigation.Screen
 import java.util.*
 
 
-fun getMessagesListData(userModel: UserModel): List<MessageModel> {
+fun getMessagesListData(chatModel: ChatModel): List<MessageModel> {
     return listOf(
         MessageModel(
             text = "TestFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
@@ -24,9 +24,33 @@ fun getMessagesListData(userModel: UserModel): List<MessageModel> {
 
 fun getChatsListData(): List<ChatModel> {
     return listOf(
-        ChatModel("Freeze2222", "...", "#000000", "23:51", null, 3, "23:52"),
-        ChatModel("NotFreeze2222", "...", "#000001", "23:00", null, 0, "23:00"),
-        ChatModel("AbsolutelyNotFreeze2222", "test-1", "#000002", "0:00", null, 125, "0:00")
+        ChatModel("Freeze2222",
+            "...",
+            "#123458",
+            "test1", "23:51",
+            null,
+            3,
+            "23:52"),
+        ChatModel(
+            "NotFreeze2222",
+            "...",
+            "#123457",
+            "test2",
+            "23:00",
+            null,
+            0,
+            "23:00"
+        ),
+        ChatModel(
+            "AbsolutelyNotFreeze2222",
+            "test-1",
+            "#123456",
+            "test3",
+            "0:00",
+            null,
+            125,
+            "0:00"
+        )
 
     )
 }
@@ -53,6 +77,9 @@ fun createAccount(navController: NavController) {
     }
 }
 
-fun isUserOnline(userModel: UserModel): Boolean {
-    return userModel.lastSeen.toLong() - Calendar.getInstance().time.time < 0
+fun isUserOnline(chatModel: ChatModel): Boolean {
+    val time = chatModel.lastSeen.split(":")
+    val calendar = Calendar.getInstance()
+    calendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, time[0].toInt(), time[1].toInt())
+    return calendar.timeInMillis - Calendar.getInstance().timeInMillis < 0
 }
