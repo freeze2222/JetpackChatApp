@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,7 +43,8 @@ fun ProfileScreen(navController: NavController) {
         )
         {
             Spacer(modifier = Modifier.height(49.dp))
-            ChatText(text = titleData[4], fontFamily = boldFont)
+                ChatText(text = titleData[4], fontFamily = boldFont)
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Column(
                 modifier = Modifier
@@ -111,7 +113,7 @@ fun ProfileScreen(navController: NavController) {
                             FirebaseAuth
                                 .getInstance()
                                 .signOut()
-                            navController.navigate(Screen.SignIn.route){
+                            navController.navigate(Screen.SignIn.route) {
                                 navController.popBackStack()
                             }
                         }
@@ -128,4 +130,3 @@ fun ProfileScreen(navController: NavController) {
             }
         }
     }
-}

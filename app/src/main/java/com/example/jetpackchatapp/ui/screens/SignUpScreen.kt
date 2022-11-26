@@ -26,9 +26,10 @@ import com.example.jetpackchatapp.ui.views.*
 @Composable
 fun CreateAccountScreen(navController: NavController) {
     val usernameViewModel = ViewModel()
+    val emailViewModel = ViewModel()
     val passwordViewModel = ViewModel()
-    val email = ViewModel()
     val passwordConfirmationViewModel = ViewModel()
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -86,7 +87,11 @@ fun CreateAccountScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(20.dp))
                 ChatText(text = descriptionData[0], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(12.dp))
-                EditText(hint = descriptionData[7], isPassword = false, viewModel = usernameViewModel) {
+                EditText(
+                    hint = descriptionData[7],
+                    isPassword = false,
+                    viewModel = usernameViewModel
+                ) {
                     Image(
                         painter = painterResource(id = imageData[3]),
                         contentDescription = null,
@@ -100,7 +105,11 @@ fun CreateAccountScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
                 ChatText(text = descriptionData[5], fontFamily = regularFont, size = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
-                EditText(hint = descriptionData[6], isPassword = false, viewModel = email) {
+                EditText(
+                    hint = descriptionData[6],
+                    isPassword = false,
+                    viewModel = emailViewModel
+                ) {
                     TextImageView(id = imageData[5])
                 }
                 Spacer(modifier = Modifier.height(18.dp))
@@ -129,7 +138,13 @@ fun CreateAccountScreen(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 ChatButton(text = descriptionData[4]) {
-                    createAccount(navController)
+                    createAccount(
+                        navController,
+                        usernameViewModel.getText(),
+                        emailViewModel.getText(),
+                        passwordViewModel.getText(),
+                        passwordConfirmationViewModel.getText()
+                    )
                 }
             }
         }

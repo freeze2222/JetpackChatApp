@@ -26,8 +26,7 @@ import com.example.jetpackchatapp.ui.views.*
 fun SignInScreen(navController: NavController, viewModel: ViewModel) {
     val usernameViewModel = ViewModel()
     val passwordViewModel = ViewModel()
-    var username: String
-    var password: String
+
     Surface(
         modifier = Modifier
             .background(Purple)
@@ -65,7 +64,11 @@ fun SignInScreen(navController: NavController, viewModel: ViewModel) {
                     Spacer(modifier = Modifier.height(35.dp))
                     ChatText(text = descriptionData[0], fontFamily = regularFont, size = 18.sp)
                     Spacer(modifier = Modifier.height(16.dp))
-                    EditText(hint = descriptionData[7], isPassword = false, viewModel = usernameViewModel) {
+                    EditText(
+                        hint = descriptionData[7],
+                        isPassword = false,
+                        viewModel = usernameViewModel
+                    ) {
                         TextImageView(id = imageData[3])
                     }
                     Spacer(modifier = Modifier.height(21.dp))
@@ -81,7 +84,13 @@ fun SignInScreen(navController: NavController, viewModel: ViewModel) {
                         TextImageView(id = imageData[4])
                     }
                     Spacer(modifier = Modifier.height(35.dp))
-                    ChatButton(text = descriptionData[3]) { login(navController) }
+                    ChatButton(text = descriptionData[3]) {
+                        login(
+                            navController,
+                            usernameViewModel.getText(),
+                            passwordViewModel.getText()
+                        )
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     ChatButton(text = descriptionData[4]) {
                         navController.navigate(Screen.SignUp.route)

@@ -2,6 +2,10 @@ package com.example.jetpackchatapp.model.data
 
 import com.example.jetpackchatapp.R
 
+const val USERNAME = "username"
+const val EMAIL = "email"
+const val PASSWORD = "password"
+
 val titleData = listOf(
     "Sign In To Your Account",
     "Create a Account",
@@ -41,3 +45,4 @@ val imageData = listOf(
     R.drawable.user_icon_yellow,
     R.drawable.icon_power
 )
+

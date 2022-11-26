@@ -44,7 +44,9 @@ fun AccountSettingsScreen(controller: NavController) {
             Spacer(modifier = Modifier.height(30.dp))
             Row {
                 IconButton(onClick = {
-                    controller.popBackStack()
+                    controller.navigate(Screen.Main.route){
+                        controller.popBackStack()
+                    }
                 }) {
                     Image(
                         painter = painterResource(id = imageData[7]),
