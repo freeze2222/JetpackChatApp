@@ -66,7 +66,7 @@ fun User(data: UserModel) {
                         verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.End
                     ) {
-                        ChatText(text = data.lastSeen, size = 14.sp, padding_start = 0.dp)
+                        ChatText(text = data.lastSeen.toString(), size = 14.sp, padding_start = 0.dp)
                         Spacer(modifier = Modifier.height(15.dp))
                 }
             }

@@ -10,14 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.jetpackchatapp.model.data.*
-import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.repository.createAccount
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
@@ -29,6 +27,7 @@ fun CreateAccountScreen(navController: NavController) {
     val emailViewModel = ViewModel()
     val passwordViewModel = ViewModel()
     val passwordConfirmationViewModel = ViewModel()
+    val context = LocalContext.current
 
     Surface(
         modifier = Modifier
@@ -143,7 +142,8 @@ fun CreateAccountScreen(navController: NavController) {
                         usernameViewModel.getText(),
                         emailViewModel.getText(),
                         passwordViewModel.getText(),
-                        passwordConfirmationViewModel.getText()
+                        passwordConfirmationViewModel.getText(),
+                        context
                     )
                 }
             }
