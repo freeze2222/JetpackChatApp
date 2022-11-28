@@ -10,9 +10,11 @@ import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.SignInMethodQueryResult
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
@@ -70,10 +72,15 @@ fun getChatsListData(): List<ChatModel> {
     )
 }
 
-fun getContactListData(): List<UserModel> {
-    return listOf(
-        UserModel("User1", "Test1", UUID.randomUUID(), null, Calendar.getInstance().timeInMillis)
-    )
+fun getContactListData(username: String): List<UserModel> {
+    val reference = FirebaseDatabase.getInstance().reference.child("users").child("contacts").get()
+        .addOnSuccessListener(
+            OnSuccessListener {
+                if (it.exists()){
+                    it.getValue()
+                }
+            })
+    return listOf()
 }
 
 fun login(

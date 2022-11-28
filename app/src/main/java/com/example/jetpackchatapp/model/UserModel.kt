@@ -9,5 +9,6 @@ data class UserModel(
     val UID: UUID,
     val avatar: Painter?,
     val lastSeen: Long,
-
+    val contacts: List<UserModel>,
+    val chats : List<ChatModel>,
     )
