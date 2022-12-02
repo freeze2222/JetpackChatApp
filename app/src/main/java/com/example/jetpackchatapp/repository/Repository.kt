@@ -11,10 +11,7 @@ import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.SignInMethodQueryResult
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
@@ -35,6 +32,7 @@ fun getMessagesListData(chatModel: ChatModel): List<MessageModel> {
 }
 
 fun getChatsListData(): List<ChatModel> {
+
     return listOf(
         ChatModel(
             "Freeze2222",
@@ -45,42 +43,23 @@ fun getChatsListData(): List<ChatModel> {
             null,
             3,
             "23:52"
-        ),
-        ChatModel(
-            "NotFreeze2222",
-            "...",
-            "#123457",
-            "#123456",
-            "test2",
-            "23:00",
-            null,
-            0,
-            "23:00"
-        ),
-        ChatModel(
-            "AbsolutelyNotFree",
-            "test-1",
-            "#123456",
-            "#123456",
-            "test3",
-            "0:00",
-            null,
-            125,
-            "0:00"
         )
-
     )
 }
 
 fun getContactListData(username: String): List<UserModel> {
-    val reference = FirebaseDatabase.getInstance().reference.child("users").child("contacts").get()
-        .addOnSuccessListener(
-            OnSuccessListener {
-                if (it.exists()){
-                    it.getValue()
-                }
-            })
-    return listOf()
+    val reference = FirebaseDatabase.getInstance().reference.child("users").child("contacts")
+    var value: List<UserModel> = listOf()
+    synchronized(
+        {
+            reference.get()
+                .addOnSuccessListener(
+                    OnSuccessListener {
+                        if (it.exists()) {
+                            value = it.value as List<UserModel>
+                        }
+                    })
+        }, { return value })
 }
 
 fun login(
@@ -135,30 +114,30 @@ fun createAccount(
         Toast.makeText(context, ERROR_EMAIL, Toast.LENGTH_SHORT).show()
         return
     }
-    FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(
-        OnCompleteListener {
-            val isNewUser = it.result.signInMethods!!.isEmpty()
-            if (isNewUser) {
-                val reference =
-                    FirebaseDatabase
-                        .getInstance()
-                        .reference
-                        .child("users")
-                        .child(email.replace("@", "").replace(".", ""))
-                reference.setValue(
-                    UserModel(
-                        username, DEFAULT_DESCRIPTION, UUID.randomUUID(),
-                        avatar = null, Calendar.getInstance().timeInMillis
-                    )
+    FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener {
+        val isNewUser = it.result.signInMethods!!.isEmpty()
+        if (isNewUser) {
+            val reference =
+                FirebaseDatabase
+                    .getInstance()
+                    .reference
+                    .child("users")
+                    .child(email.replace("@", "").replace(".", ""))
+            reference.setValue(
+                UserModel(
+                    username, DEFAULT_DESCRIPTION, UUID.randomUUID(),
+                    avatar = null, Calendar.getInstance().timeInMillis,
+                    listOf(), listOf()
                 )
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                navController.navigate(Screen.Main.route) {
-                    navController.popBackStack()
-                }
-            } else {
-                Toast.makeText(context, "User is already registered", Toast.LENGTH_SHORT).show()
+            )
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            navController.navigate(Screen.Main.route) {
+                navController.popBackStack()
             }
-        })
+        } else {
+            Toast.makeText(context, "User is already registered", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
 
 fun isUserOnline(chatModel: ChatModel): Boolean {
