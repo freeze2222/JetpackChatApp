@@ -1,6 +1,7 @@
 package com.example.jetpackchatapp.repository
 
 import android.content.Context
+import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
 import android.widget.Toast
 import androidx.navigation.NavController
@@ -9,11 +10,13 @@ import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 fun getMessagesListData(chatModel: ChatModel): List<MessageModel> {
@@ -47,19 +50,18 @@ fun getChatsListData(): List<ChatModel> {
     )
 }
 
-fun getContactListData(username: String): List<UserModel> {
-    val reference = FirebaseDatabase.getInstance().reference.child("users").child("contacts")
-    var value: List<UserModel> = listOf()
-    synchronized(
-        {
-            reference.get()
-                .addOnSuccessListener(
-                    OnSuccessListener {
-                        if (it.exists()) {
-                            value = it.value as List<UserModel>
-                        }
-                    })
-        }, { return value })
+fun getContactListData(email: String, callback: Callback){
+    val reference = FirebaseDatabase.getInstance().reference.child("users").child(email).child("contacts")
+
+        reference.get()
+            .addOnSuccessListener {
+                if (it.exists()) {
+                    //val result = it.getValue<List<List<Any>>>()
+                    //Log.wtf("Debug", result.toString())
+                    // =(
+                }
+            }
+
 }
 
 fun login(

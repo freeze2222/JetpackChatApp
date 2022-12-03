@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jetpackchatapp.R
+import com.example.jetpackchatapp.model.data.Callback
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
 import com.example.jetpackchatapp.repository.getChatsListData
@@ -62,12 +63,17 @@ fun ContactsScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(46.dp))
-                val items = getContactListData()
+                val items = getContactListData("test1", object:Callback{
+                    override fun call(T: Any?) {
+
+                    }
+
+                })
                 Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
-                    items(items = items) { item ->
-                        User(data = item)
-                    }
+                    //items(items = items) { item ->
+                    //    User(data = item)
+                    //}
                 }
             }
         }

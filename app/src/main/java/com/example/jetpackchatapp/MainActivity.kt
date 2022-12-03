@@ -1,6 +1,7 @@
 package com.example.jetpackchatapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.jetpackchatapp.model.UserModel
+import com.example.jetpackchatapp.model.data.Callback
 import com.example.jetpackchatapp.model.data.ViewModel
+import com.example.jetpackchatapp.repository.getContactListData
 import com.example.jetpackchatapp.ui.screens.*
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +44,16 @@ class MainActivity : ComponentActivity() {
             val viewModel = ViewModel()
             JetpackChatAppTheme {
                 FrameScreen(viewModel)
+                var value by remember {
+                    mutableStateOf(listOf(UserModel()))
+                }
+                getContactListData("opop1094gmailcom", object : Callback {
+                    override fun call(T: Any?) {
+                        val list = T as List<UserModel>
+                        value = list
+                    }
+                })
+                Log.wtf("DEBUG", value[0].name)
             }
         }
     }

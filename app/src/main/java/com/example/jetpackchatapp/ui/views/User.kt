@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackchatapp.model.UserModel
+import com.example.jetpackchatapp.model.data.Callback
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.repository.getContactListData
@@ -30,7 +31,15 @@ fun User(data: UserModel) {
                 .fillMaxSize()
                 .background(LightPurple)
         ) {
-            if (getContactListData()[0].UID != data.UID) {
+            var value by remember {
+                mutableStateOf(listOf(UserModel()))
+            }
+            getContactListData("test1", object : Callback {
+                override fun call(T: Any?) {
+                    value = T as List<UserModel>
+                }
+            })
+            if (value[0].UID != data.UID) {
                 Separator()
                 Spacer(modifier = Modifier.height(11.dp))
             }
@@ -72,10 +81,4 @@ fun User(data: UserModel) {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun UserPreview() {
-    User(data = getContactListData()[0])
 }
