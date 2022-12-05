@@ -9,7 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jetpackchatapp.R
+import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.Callback
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
@@ -26,6 +27,7 @@ import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.User
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ContactsScreen() {
@@ -63,17 +65,26 @@ fun ContactsScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(46.dp))
-                val items = getContactListData("test1", object:Callback{
-                    override fun call(T: Any?) {
 
-                    }
+                var value by remember {
+                    mutableStateOf(listOf(UserModel()))
+                }
 
-                })
+                getContactListData(
+                    (FirebaseAuth.getInstance().currentUser!!.email)!!.replace(
+                        "@",
+                        ""
+                    ).replace(".", ""), object : Callback {
+                        override fun call(T: Any?) {
+                            val list = T as List<UserModel>
+                            value = list
+                        }
+                    })
                 Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
-                    //items(items = items) { item ->
-                    //    User(data = item)
-                    //}
+                    items(items = value) { item ->
+                        User(data = item, value)
+                    }
                 }
             }
         }

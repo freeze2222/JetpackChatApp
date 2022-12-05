@@ -2,6 +2,7 @@ package com.example.jetpackchatapp.model.data
 
 import android.media.MediaDrm
 import com.example.jetpackchatapp.R
+import com.google.firebase.database.FirebaseDatabase
 
 const val USERNAME = "username"
 const val EMAIL = "email"
@@ -11,6 +12,7 @@ const val ERROR_EMPTY = "Fill all fields"
 const val ERROR_USERNAME = "Username is not valid"
 const val ERROR_PASSWORD = "Password must start with number or letter and be in 4..16 length"
 const val ERROR_EMAIL = "Email is not valid"
+const val EMPTY_REFERENCE = "FirebaseDatabase.getInstance().reference.child(null)"
 
 val titleData = listOf(
     "Sign In To Your Account",

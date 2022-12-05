@@ -6,21 +6,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.jetpackchatapp.model.ChatModel
+import com.example.jetpackchatapp.model.UserModel
+import com.example.jetpackchatapp.model.data.Callback
 import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
 import com.example.jetpackchatapp.repository.getChatsListData
+import com.example.jetpackchatapp.repository.getContactListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.Chat
 import com.example.jetpackchatapp.ui.views.ChatText
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ChatsScreen(navController:NavController, viewModel: ViewModel) {
@@ -45,11 +50,24 @@ fun ChatsScreen(navController:NavController, viewModel: ViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(46.dp))
-                val items = getChatsListData()
+                var value by remember {
+                    mutableStateOf(listOf(ChatModel()))
+                }
+
+                getChatsListData(
+                    (FirebaseAuth.getInstance().currentUser!!.email)!!.replace(
+                        "@",
+                        ""
+                    ).replace(".", ""), object : Callback {
+                        override fun call(T: Any?) {
+                            val list = T as List<ChatModel>
+                            value = list
+                        }
+                    })
                 Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
-                    items(items = items) { item ->
-                        Chat(data = item, navController, viewModel = viewModel)
+                    items(items = value) { item ->
+                        Chat(data = item, navController, viewModel = viewModel, value)
                     }
                 }
             }

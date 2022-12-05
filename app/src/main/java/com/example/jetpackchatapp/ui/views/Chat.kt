@@ -15,17 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
-import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.model.navigation.Screen
-import com.example.jetpackchatapp.repository.getChatsListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 
 @Composable
-fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel) {
+fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel, list: List<ChatModel>) {
     Surface(
         modifier = Modifier
             .padding(bottom = 11.dp)
@@ -40,7 +38,7 @@ fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel) {
                 .fillMaxSize()
                 .background(LightPurple)
         ) {
-            if (getChatsListData()[0].ChatUID != data.ChatUID) {
+            if (list[0].chatUID != data.chatUID) {
                 Separator()
                 Spacer(modifier = Modifier.height(11.dp))
             }
@@ -76,7 +74,6 @@ fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel) {
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.End
                 ) {
-                    ChatText(text = data.time, size = 14.sp, padding_start = 0.dp)
                     Spacer(modifier = Modifier.height(15.dp))
                     if (data.new_messages!=0) {
                         Column(

@@ -19,10 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
-import com.example.jetpackchatapp.model.data.ViewModel
-import com.example.jetpackchatapp.model.data.boldFont
-import com.example.jetpackchatapp.model.data.descriptionData
-import com.example.jetpackchatapp.model.data.imageData
+import com.example.jetpackchatapp.model.data.*
+import com.example.jetpackchatapp.repository.getAvatar
 import com.example.jetpackchatapp.repository.getMessagesListData
 import com.example.jetpackchatapp.repository.isUserOnline
 import com.example.jetpackchatapp.ui.theme.LightPurple
@@ -30,11 +28,12 @@ import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
+import com.google.firebase.database.FirebaseDatabase
 
 @Composable
 fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
     val messageViewModel = ViewModel()
-    var text : String
+    var text: String
     val chatModel = data.chatModel!!
     Surface(
         modifier = Modifier
@@ -52,7 +51,7 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                     .height(58.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {navController.popBackStack()}) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Image(
                         painter = painterResource(id = imageData[7]),
                         contentDescription = null,
@@ -63,8 +62,11 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                 }
                 Spacer(modifier = Modifier.width(17.dp))
                 Image(
-                    painter = if (chatModel.avatar != null) {
-                        painterResource(chatModel.avatar)
+                    painter = if (chatModel.avatarRef != FirebaseDatabase.getInstance().getReference(
+                        EMPTY_REFERENCE
+                    )
+                    ) {
+                        painterResource(getAvatar(chatModel.avatarRef))
                     } else {
                         painterResource(
                             id = R.drawable.no_avatar

@@ -10,58 +10,84 @@ import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.getValue
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 fun getMessagesListData(chatModel: ChatModel): List<MessageModel> {
-    val reference = FirebaseDatabase.getInstance().reference.child("chats").child(chatModel.ChatUID)
-    return listOf(
-        MessageModel(
-            text = "TestFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-            "Freeze2222"
-        ),
-        MessageModel(text = "TestFFFFFFFFFFFFFFFFFFFFFFF", "Freeze2222"),
-        MessageModel(text = "TestFFFFFFFFFFFFF", "Test1"),
-        MessageModel(text = "TestFFFFFFFFFFFFFFFFFFFFFFF", "Freeze2222"),
-        MessageModel(text = "Test1", "Test1")
-    )
+    val reference = FirebaseDatabase.getInstance().reference.child("chats").child(chatModel.chatUID.toString())
+    return listOf()
 
 }
 
-fun getChatsListData(): List<ChatModel> {
-
-    return listOf(
-        ChatModel(
-            "Freeze2222",
-            "...",
-            "#123458",
-            "#123456",
-            "test1", "23:51",
-            null,
-            3,
-            "23:52"
-        )
-    )
+fun getChatsListData(email: String, callback: Callback) {
+    val reference = FirebaseDatabase.getInstance().reference.child("users").child(email).child("chats")
+    reference.get()
+        .addOnSuccessListener {
+            if (it.exists()) {
+                val a = (it.value as HashMap<*,*>).toList().toMutableList()
+                val list = ArrayList<Any>()
+                for (i in a) {
+                    Log.e("DEBUG", i.second.toString())
+                    list.add((i.second) as HashMap<*,*>)
+                }
+                val testList = ArrayList<Any>()
+                val result = ArrayList<ChatModel>()
+                for(i in list){
+                    (i as HashMap<*, *>).toList().forEach { it1 ->
+                        testList.add(it1.second)
+                    }
+                    val chat = ChatModel(
+                        name = testList[1].toString(),
+                        lastSeen = testList[1] as Long,
+                        last_message = testList[4] as String,
+                        new_messages = testList[0] as Int,
+                        firstUID = testList[3] as Long,
+                        secondUID = testList[2] as Long,
+                        avatarRef = testList[5] as DatabaseReference,
+                        chatUID = testList[6] as Long
+                    )
+                    result.add(chat)
+                }
+                Log.e("DEBUG", result.toString())
+                //callback.call(result)
+            }
+        }
 }
-
+fun getAvatar(avatarRef: DatabaseReference): Int {
+    return 0
+}
 fun getContactListData(email: String, callback: Callback){
     val reference = FirebaseDatabase.getInstance().reference.child("users").child(email).child("contacts")
-
         reference.get()
             .addOnSuccessListener {
                 if (it.exists()) {
-                    //val result = it.getValue<List<List<Any>>>()
-                    //Log.wtf("Debug", result.toString())
-                    // =(
+                    val a = (it.value as HashMap<*,*>).toList().toMutableList()
+                    val list = ArrayList<Any>()
+                    for (i in a) {
+                        list.add((i.second) as HashMap<*,*>)
+                    }
+                    val testList = ArrayList<Any>()
+                    val result = ArrayList<UserModel>()
+                    for(i in list){
+                        (i as HashMap<*, *>).toList().forEach { it1 ->
+                            testList.add(it1.second)
+                        }
+                        val user = UserModel(
+                            name = testList[2].toString(),
+                            description =  testList[3].toString(),
+                            UID = testList[0] as Long,
+                            avatarRef =if (testList[4].toString().isEmpty()) FirebaseDatabase.getInstance().reference.child("null") else FirebaseDatabase.getInstance().reference,
+                            lastSeen = testList[1] as Long
+                        )
+                       result.add(user)
+                    }
+                    callback.call(result)
                 }
             }
-
 }
 
 fun login(
@@ -127,9 +153,10 @@ fun createAccount(
                     .child(email.replace("@", "").replace(".", ""))
             reference.setValue(
                 UserModel(
-                    username, DEFAULT_DESCRIPTION, UUID.randomUUID(),
-                    avatar = null, Calendar.getInstance().timeInMillis,
-                    listOf(), listOf()
+                    description =  DEFAULT_DESCRIPTION,
+                    lastSeen = Calendar.getInstance().timeInMillis,
+                    name =  username,
+                    UID = UUID.randomUUID().mostSignificantBits
                 )
             )
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
@@ -143,10 +170,8 @@ fun createAccount(
 }
 
 fun isUserOnline(chatModel: ChatModel): Boolean {
-    val time = chatModel.lastSeen.split(":")
-    val calendar = Calendar.getInstance()
-    calendar.set(Calendar.YEAR, Calendar.MONTH, Calendar.DATE, time[0].toInt(), time[1].toInt())
-    return calendar.timeInMillis - Calendar.getInstance().timeInMillis < 0
+    val time = chatModel.lastSeen
+    return time - Calendar.getInstance().timeInMillis < 0
 }
 
 fun isEmailValid(string: String): Boolean {

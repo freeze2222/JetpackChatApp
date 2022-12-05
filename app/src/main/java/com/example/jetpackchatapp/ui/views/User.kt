@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackchatapp.model.UserModel
@@ -19,7 +18,7 @@ import com.example.jetpackchatapp.repository.getContactListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 
 @Composable
-fun User(data: UserModel) {
+fun User(data: UserModel, list: List<UserModel>) {
     Surface(
         modifier = Modifier
             .padding(bottom = 11.dp)
@@ -31,15 +30,7 @@ fun User(data: UserModel) {
                 .fillMaxSize()
                 .background(LightPurple)
         ) {
-            var value by remember {
-                mutableStateOf(listOf(UserModel()))
-            }
-            getContactListData("test1", object : Callback {
-                override fun call(T: Any?) {
-                    value = T as List<UserModel>
-                }
-            })
-            if (value[0].UID != data.UID) {
+            if (list[0].UID != data.UID) {
                 Separator()
                 Spacer(modifier = Modifier.height(11.dp))
             }
