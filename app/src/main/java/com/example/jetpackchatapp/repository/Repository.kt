@@ -13,81 +13,135 @@ import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-fun getMessagesListData(chatModel: ChatModel): List<MessageModel> {
-    val reference = FirebaseDatabase.getInstance().reference.child("chats").child(chatModel.chatUID.toString())
-    return listOf()
-
+fun sendMessage(messageModel: MessageModel, uid: Long) {
+    FirebaseDatabase.getInstance()
+        .reference
+        .child("messages")
+        .child(uid.toString()).push()
+        .setValue(messageModel)
 }
 
-fun getChatsListData(email: String, callback: Callback) {
-    val reference = FirebaseDatabase.getInstance().reference.child("users").child(email).child("chats")
+fun getUsername(email: String, callback: Callback) {
+    FirebaseDatabase.getInstance().reference
+        .child("users")
+        .child(email.replace("@", "").replace(".", ""))
+        .child("name")
+        .get().addOnSuccessListener {
+            callback.call(it.value)
+        }
+}
+
+fun parseMessage(text: String, from_user: String): MessageModel {
+    return MessageModel(text, from_user)
+}
+
+fun getMessagesListData(chatModel: ChatModel, callback: Callback) {
+    val reference =
+        FirebaseDatabase.getInstance().reference.child("messages") .child(chatModel.chatUID.toString())
     reference.get()
         .addOnSuccessListener {
             if (it.exists()) {
-                val a = (it.value as HashMap<*,*>).toList().toMutableList()
+                val a = (it.value as HashMap<*, *>).toList().toMutableList()
                 val list = ArrayList<Any>()
                 for (i in a) {
                     Log.e("DEBUG", i.second.toString())
-                    list.add((i.second) as HashMap<*,*>)
+                    list.add((i.second) as HashMap<*, *>)
+                }
+                val testList = ArrayList<Any>()
+                val result = ArrayList<MessageModel>()
+                for (i in list) {
+                    (i as HashMap<*, *>).toList().forEach { it1 ->
+                        testList.add(it1.second)
+                    }
+                    val message = MessageModel(
+                        text = testList[0] as String,
+                        from_user = testList[1] as String
+                    )
+                    result.add(message)
+                }
+                callback.call(result)
+            }
+
+        }
+}
+
+fun getChatsListData(email: String, callback: Callback) {
+    val reference =
+        FirebaseDatabase.getInstance().reference.child("users").child(email).child("chats")
+    reference.get()
+        .addOnSuccessListener {
+            if (it.exists()) {
+                val a = (it.value as HashMap<*, *>).toList().toMutableList()
+                val list = ArrayList<Any>()
+                for (i in a) {
+                    list.add((i.second) as HashMap<*, *>)
                 }
                 val testList = ArrayList<Any>()
                 val result = ArrayList<ChatModel>()
-                for(i in list){
+                for (i in list) {
                     (i as HashMap<*, *>).toList().forEach { it1 ->
                         testList.add(it1.second)
                     }
                     val chat = ChatModel(
-                        name = testList[1].toString(),
-                        lastSeen = testList[1] as Long,
-                        last_message = testList[4] as String,
-                        new_messages = testList[0] as Int,
-                        firstUID = testList[3] as Long,
-                        secondUID = testList[2] as Long,
-                        avatarRef = testList[5] as DatabaseReference,
-                        chatUID = testList[6] as Long
+                        name = testList[2].toString(),
+                        lastSeen = testList[0] as Long,
+                        last_message = testList[5] as String,
+                        new_messages = (testList[1] as Long).toInt(),
+                        firstUID = testList[4] as Long,
+                        secondUID = testList[3] as Long,
+                        avatarRef = if ((testList[6] as String).isEmpty()) FirebaseDatabase.getInstance().reference.child(
+                            EMPTY_REFERENCE
+                        ) else FirebaseDatabase.getInstance().reference.child(
+                            testList[6].toString()
+                        ),
+                        chatUID = testList[7] as Long
                     )
                     result.add(chat)
                 }
-                Log.e("DEBUG", result.toString())
-                //callback.call(result)
+                callback.call(result)
             }
         }
 }
+
 fun getAvatar(avatarRef: DatabaseReference): Int {
     return 0
 }
-fun getContactListData(email: String, callback: Callback){
-    val reference = FirebaseDatabase.getInstance().reference.child("users").child(email).child("contacts")
-        reference.get()
-            .addOnSuccessListener {
-                if (it.exists()) {
-                    val a = (it.value as HashMap<*,*>).toList().toMutableList()
-                    val list = ArrayList<Any>()
-                    for (i in a) {
-                        list.add((i.second) as HashMap<*,*>)
-                    }
-                    val testList = ArrayList<Any>()
-                    val result = ArrayList<UserModel>()
-                    for(i in list){
-                        (i as HashMap<*, *>).toList().forEach { it1 ->
-                            testList.add(it1.second)
-                        }
-                        val user = UserModel(
-                            name = testList[2].toString(),
-                            description =  testList[3].toString(),
-                            UID = testList[0] as Long,
-                            avatarRef =if (testList[4].toString().isEmpty()) FirebaseDatabase.getInstance().reference.child("null") else FirebaseDatabase.getInstance().reference,
-                            lastSeen = testList[1] as Long
-                        )
-                       result.add(user)
-                    }
-                    callback.call(result)
+
+fun getContactListData(email: String, callback: Callback) {
+    val reference =
+        FirebaseDatabase.getInstance().reference.child("users").child(email).child("contacts")
+    reference.get()
+        .addOnSuccessListener {
+            if (it.exists()) {
+                val a = (it.value as HashMap<*, *>).toList().toMutableList()
+                val list = ArrayList<Any>()
+                for (i in a) {
+                    list.add((i.second) as HashMap<*, *>)
                 }
+                val testList = ArrayList<Any>()
+                val result = ArrayList<UserModel>()
+                for (i in list) {
+                    (i as HashMap<*, *>).toList().forEach { it1 ->
+                        testList.add(it1.second)
+                    }
+                    val user = UserModel(
+                        name = testList[2].toString(),
+                        description = testList[3].toString(),
+                        UID = testList[0] as Long,
+                        avatarRef = if (testList[4].toString()
+                                .isEmpty()
+                        ) FirebaseDatabase.getInstance().reference.child("null") else FirebaseDatabase.getInstance().reference,
+                        lastSeen = testList[1] as Long
+                    )
+                    result.add(user)
+                }
+                callback.call(result)
             }
+        }
 }
 
 fun login(
@@ -153,9 +207,9 @@ fun createAccount(
                     .child(email.replace("@", "").replace(".", ""))
             reference.setValue(
                 UserModel(
-                    description =  DEFAULT_DESCRIPTION,
+                    description = DEFAULT_DESCRIPTION,
                     lastSeen = Calendar.getInstance().timeInMillis,
-                    name =  username,
+                    name = username,
                     UID = UUID.randomUUID().mostSignificantBits
                 )
             )

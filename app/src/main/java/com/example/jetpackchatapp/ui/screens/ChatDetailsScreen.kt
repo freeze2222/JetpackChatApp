@@ -2,6 +2,7 @@ package com.example.jetpackchatapp.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,7 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,21 +20,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
+import com.example.jetpackchatapp.model.ChatModel
+import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.model.data.*
-import com.example.jetpackchatapp.repository.getAvatar
-import com.example.jetpackchatapp.repository.getMessagesListData
-import com.example.jetpackchatapp.repository.isUserOnline
+import com.example.jetpackchatapp.repository.*
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 
 @Composable
 fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
+    var value by remember {
+        mutableStateOf(listOf(MessageModel()))
+    }
     val messageViewModel = ViewModel()
-    var text: String
     val chatModel = data.chatModel!!
     Surface(
         modifier = Modifier
@@ -42,7 +49,8 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Purple)
+                .background(Purple),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(modifier = Modifier.height(26.dp))
             Row(
@@ -62,9 +70,7 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                 }
                 Spacer(modifier = Modifier.width(17.dp))
                 Image(
-                    painter = if (chatModel.avatarRef != FirebaseDatabase.getInstance().getReference(
-                        EMPTY_REFERENCE
-                    )
+                    painter = if (chatModel.avatarRef != FirebaseDatabase.getInstance().getReference(EMPTY_REFERENCE)
                     ) {
                         painterResource(getAvatar(chatModel.avatarRef))
                     } else {
@@ -112,24 +118,31 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .weight(6f)
                     .clip(RoundedCornerShape(48.dp, 48.dp, 0.dp, 0.dp))
                     .background(
                         LightPurple
                     )
             ) {
                 Spacer(modifier = Modifier.height(45.dp))
-                val items = getMessagesListData(chatModel)
+
+                getMessagesListData(chatModel, object :Callback{
+                    override fun call(T: Any?) {
+                        value = T as List<MessageModel>
+                    }
+                })
                 LazyColumn {
-                    items(items = items) { item ->
+                    items(items = value) { item ->
                         Message(data = item)
                     }
                 }
-                Spacer(modifier = Modifier.height(40.dp))
+            }
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .height(60.dp)
+                        .weight(1f, false)
+
                 ) {
                     EditText(
                         hint = descriptionData[9],
@@ -156,10 +169,65 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                                 .height(30.dp)
                                 .width(30.dp)
                                 .clip(CircleShape)
+                                .clickable {
+                                    getUsername(
+                                        (FirebaseAuth.getInstance().currentUser!!.email!!).toString(),
+                                        object : Callback {
+                                            override fun call(T: Any?) {
+                                                val message = parseMessage(
+                                                    messageViewModel.text,
+                                                    T as String
+                                                )
+                                                sendMessage(message, chatModel.chatUID)
+                                                getMessagesListData(chatModel, object :Callback{
+                                                    override fun call(T: Any?) {
+                                                        value = T as List<MessageModel>
+                                                    }
+                                                })
+                                            }
+                                        })
+                                }
                         )
                     }
                 }
             }
         }
+    val ref = FirebaseDatabase.getInstance().reference.child("messages").child(chatModel.chatUID.toString())
+    ref.addChildEventListener(object : ChildEventListener{
+        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+            getMessagesListData(chatModel, callback = object:Callback{
+                override fun call(T: Any?) {
+                    getMessagesListData(chatModel, object :Callback{
+                        override fun call(T: Any?) {
+                            value = T as List<MessageModel>
+                        }
+                    })
+                }
+            })
+        }
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            getMessagesListData(chatModel, callback = object:Callback{
+                override fun call(T: Any?) {
+                    getMessagesListData(chatModel, object :Callback{
+                        override fun call(T: Any?) {
+                            value = T as List<MessageModel>
+                        }
+                    })
+                }
+            })
+        }
+        override fun onChildRemoved(snapshot: DataSnapshot) {
+            getMessagesListData(chatModel, callback = object:Callback{
+                override fun call(T: Any?) {
+                    getMessagesListData(chatModel, object :Callback{
+                        override fun call(T: Any?) {
+                            value = T as List<MessageModel>
+                        }
+                    })
+                }
+            })
+        }
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+        override fun onCancelled(error: DatabaseError) {}
+    })
     }
-}

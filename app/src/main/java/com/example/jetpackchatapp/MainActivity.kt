@@ -20,10 +20,7 @@ import com.example.jetpackchatapp.repository.getContactListData
 import com.example.jetpackchatapp.ui.screens.*
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -32,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Firebase.database.setPersistenceEnabled(true)
         database = Firebase.database.reference
         //database.child("users").child("user04").setValue("user_changed")
 

@@ -12,7 +12,8 @@ const val ERROR_EMPTY = "Fill all fields"
 const val ERROR_USERNAME = "Username is not valid"
 const val ERROR_PASSWORD = "Password must start with number or letter and be in 4..16 length"
 const val ERROR_EMAIL = "Email is not valid"
-const val EMPTY_REFERENCE = "FirebaseDatabase.getInstance().reference.child(null)"
+const val EMPTY_REFERENCE = "null"
+const val DATE_FORMAT = "dd/MM hh:mm"
 
 val titleData = listOf(
     "Sign In To Your Account",

@@ -11,16 +11,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHost
 import com.example.jetpackchatapp.model.ChatModel
+import com.example.jetpackchatapp.model.data.DATE_FORMAT
 import com.example.jetpackchatapp.model.data.ViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel, list: List<ChatModel>) {
@@ -28,7 +33,8 @@ fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel, li
         modifier = Modifier
             .padding(bottom = 11.dp)
             .fillMaxSize()
-            .background(LightPurple).clickable {
+            .background(LightPurple)
+            .clickable {
                 viewModel.setModel(data)
                 navController.navigate(Screen.ChatDetails.route)
             }
@@ -74,21 +80,36 @@ fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel, li
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.End
                 ) {
-                    Spacer(modifier = Modifier.height(15.dp))
-                    if (data.new_messages!=0) {
-                        Column(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .background(Purple)
-                                .defaultMinSize(minHeight = 20.dp, minWidth = 20.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            ChatText(
-                                text = data.new_messages.toString(),
-                                size = 12.sp,
-                                padding_start = 0.dp
-                            )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Column(
+                        Modifier
+                            .padding(end = 15.dp)
+                            .fillMaxSize()
+                            .background(LightPurple),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        val formatter = SimpleDateFormat(DATE_FORMAT)
+                        val calendar = Calendar.getInstance()
+                        calendar.timeInMillis = data.lastSeen
+                        ChatText(text = formatter.format(calendar.time), size = 14.sp, padding_start = 0.dp)
+                        Spacer(modifier = Modifier.height(10.dp))
+                        if (data.new_messages!=0) {
+                            Column(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(Purple)
+                                    .defaultMinSize(minHeight = 20.dp, minWidth = 20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                ChatText(
+                                    text = data.new_messages.toString(),
+                                    size = 12.sp,
+                                    padding_start = 0.dp
+                                )
+                            }
                         }
                     }
                 }

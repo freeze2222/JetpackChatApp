@@ -15,11 +15,11 @@ import com.example.jetpackchatapp.model.data.regularFont
 import com.example.jetpackchatapp.ui.theme.Coral
 import com.example.jetpackchatapp.ui.theme.DarkViolet
 import com.example.jetpackchatapp.ui.theme.LightPurple
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun Message(data: MessageModel) {
-    val isFromMe =
-        data.from_user == "Test1"//FirebaseAuth.getInstance().currentUser!!.displayName == data.from_user
+    val isFromMe = FirebaseAuth.getInstance().currentUser!!.displayName == data.from_user
     val color = if (isFromMe) Coral else DarkViolet
     Surface(
         modifier = Modifier

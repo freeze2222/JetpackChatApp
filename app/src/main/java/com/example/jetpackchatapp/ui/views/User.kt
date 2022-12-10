@@ -57,18 +57,7 @@ fun User(data: UserModel, list: List<UserModel>) {
                     Spacer(modifier = Modifier.height(2.dp))
                     ChatText(text = data.description, size = 16.sp)
                 }
-                Spacer(modifier = Modifier.width(10.dp))
-                    Column(
-                        Modifier
-                            .padding(end = 15.dp)
-                            .fillMaxSize()
-                            .background(LightPurple),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.End
-                    ) {
-                        ChatText(text = data.lastSeen.toString(), size = 14.sp, padding_start = 0.dp)
-                        Spacer(modifier = Modifier.height(15.dp))
-                }
+
             }
         }
     }
