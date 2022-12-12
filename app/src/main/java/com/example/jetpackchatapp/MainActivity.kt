@@ -25,12 +25,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
-    private lateinit var database: DatabaseReference
+    //private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Firebase.database.setPersistenceEnabled(true)
-        database = Firebase.database.reference
+        //database = Firebase.database.reference
         //database.child("users").child("user04").setValue("user_changed")
 
         setContent {

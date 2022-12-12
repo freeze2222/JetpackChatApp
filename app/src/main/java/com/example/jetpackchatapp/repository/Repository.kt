@@ -44,11 +44,11 @@ fun getMessagesListData(chatModel: ChatModel, callback: Callback) {
         FirebaseDatabase.getInstance().reference.child("messages") .child(chatModel.chatUID.toString())
     reference.get()
         .addOnSuccessListener {
+            Log.e("RESULT",it.value.toString())
             if (it.exists()) {
-                val a = (it.value as HashMap<*, *>).toList().toMutableList()
+                val data = (it.value as HashMap<*, *>).toList().toMutableList()
                 val list = ArrayList<Any>()
-                for (i in a) {
-                    Log.e("DEBUG", i.second.toString())
+                for (i in data) {
                     list.add((i.second) as HashMap<*, *>)
                 }
                 val testList = ArrayList<Any>()
@@ -57,12 +57,17 @@ fun getMessagesListData(chatModel: ChatModel, callback: Callback) {
                     (i as HashMap<*, *>).toList().forEach { it1 ->
                         testList.add(it1.second)
                     }
+                }
+                var j = 1
+                while (j<testList.size){
                     val message = MessageModel(
-                        text = testList[0] as String,
-                        from_user = testList[1] as String
+                        text = testList[j-1] as String,
+                        from_user = testList[j] as String
                     )
                     result.add(message)
+                    j+=2
                 }
+
                 callback.call(result)
             }
 

@@ -38,7 +38,7 @@ import com.google.firebase.database.FirebaseDatabase
 @Composable
 fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
     var value by remember {
-        mutableStateOf(listOf(MessageModel()))
+        mutableStateOf(arrayListOf(MessageModel()))
     }
     val messageViewModel = ViewModel()
     val chatModel = data.chatModel!!
@@ -98,11 +98,13 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                         size = 18.sp,
                         padding_start = 0.dp
                     )
+                    /*
                     ChatText(
                         text = if (isUserOnline(chatModel)) "Online" else "Offline",
                         size = 16.sp,
                         padding_start = 0.dp
                     )
+                     */
                 }
                 Spacer(modifier = Modifier.width(90.dp))
                 IconButton(onClick = { /*TODO*/ }) {
@@ -128,7 +130,7 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
 
                 getMessagesListData(chatModel, object :Callback{
                     override fun call(T: Any?) {
-                        value = T as List<MessageModel>
+                        value = T as ArrayList<MessageModel>
                     }
                 })
                 LazyColumn {
@@ -179,11 +181,8 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                                                     T as String
                                                 )
                                                 sendMessage(message, chatModel.chatUID)
-                                                getMessagesListData(chatModel, object :Callback{
-                                                    override fun call(T: Any?) {
-                                                        value = T as List<MessageModel>
-                                                    }
-                                                })
+                                                value.add(message)
+
                                             }
                                         })
                                 }
@@ -195,38 +194,10 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
     val ref = FirebaseDatabase.getInstance().reference.child("messages").child(chatModel.chatUID.toString())
     ref.addChildEventListener(object : ChildEventListener{
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            getMessagesListData(chatModel, callback = object:Callback{
-                override fun call(T: Any?) {
-                    getMessagesListData(chatModel, object :Callback{
-                        override fun call(T: Any?) {
-                            value = T as List<MessageModel>
-                        }
-                    })
-                }
-            })
+            value.add(snapshot.getValue(MessageModel::class.java)!!)
         }
-        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            getMessagesListData(chatModel, callback = object:Callback{
-                override fun call(T: Any?) {
-                    getMessagesListData(chatModel, object :Callback{
-                        override fun call(T: Any?) {
-                            value = T as List<MessageModel>
-                        }
-                    })
-                }
-            })
-        }
-        override fun onChildRemoved(snapshot: DataSnapshot) {
-            getMessagesListData(chatModel, callback = object:Callback{
-                override fun call(T: Any?) {
-                    getMessagesListData(chatModel, object :Callback{
-                        override fun call(T: Any?) {
-                            value = T as List<MessageModel>
-                        }
-                    })
-                }
-            })
-        }
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+        override fun onChildRemoved(snapshot: DataSnapshot) {}
         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
         override fun onCancelled(error: DatabaseError) {}
     })
