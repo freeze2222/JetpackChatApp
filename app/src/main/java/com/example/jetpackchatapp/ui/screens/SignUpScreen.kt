@@ -23,10 +23,10 @@ import com.example.jetpackchatapp.ui.views.*
 
 @Composable
 fun CreateAccountScreen(navController: NavController) {
-    val usernameViewModel = ViewModel()
-    val emailViewModel = ViewModel()
-    val passwordViewModel = ViewModel()
-    val passwordConfirmationViewModel = ViewModel()
+    val usernameMainViewModel = MainViewModel()
+    val emailMainViewModel = MainViewModel()
+    val passwordMainViewModel = MainViewModel()
+    val passwordConfirmationMainViewModel = MainViewModel()
     val context = LocalContext.current
 
     Surface(
@@ -89,7 +89,7 @@ fun CreateAccountScreen(navController: NavController) {
                 EditText(
                     hint = descriptionData[7],
                     isPassword = false,
-                    viewModel = usernameViewModel
+                    mainViewModel = usernameMainViewModel
                 ) {
                     Image(
                         painter = painterResource(id = imageData[3]),
@@ -107,7 +107,7 @@ fun CreateAccountScreen(navController: NavController) {
                 EditText(
                     hint = descriptionData[6],
                     isPassword = false,
-                    viewModel = emailViewModel
+                    mainViewModel = emailMainViewModel
                 ) {
                     TextImageView(id = imageData[5])
                 }
@@ -119,7 +119,7 @@ fun CreateAccountScreen(navController: NavController) {
                 EditText(
                     hint = descriptionData[2],
                     isPassword = true,
-                    viewModel = passwordViewModel
+                    mainViewModel = passwordMainViewModel
                 ) {
                     TextImageView(id = imageData[4])
                 }
@@ -131,7 +131,7 @@ fun CreateAccountScreen(navController: NavController) {
                 EditText(
                     hint = descriptionData[2],
                     isPassword = true,
-                    viewModel = passwordConfirmationViewModel
+                    mainViewModel = passwordConfirmationMainViewModel
                 ) {
                     TextImageView(id = imageData[4])
                 }
@@ -139,10 +139,10 @@ fun CreateAccountScreen(navController: NavController) {
                 ChatButton(text = descriptionData[4]) {
                     createAccount(
                         navController,
-                        usernameViewModel.getText(),
-                        emailViewModel.getText(),
-                        passwordViewModel.getText(),
-                        passwordConfirmationViewModel.getText(),
+                        usernameMainViewModel.value.toString(),
+                        emailMainViewModel.value.toString(),
+                        passwordMainViewModel.value.toString(),
+                        passwordConfirmationMainViewModel.value.toString(),
                         context
                     )
                 }

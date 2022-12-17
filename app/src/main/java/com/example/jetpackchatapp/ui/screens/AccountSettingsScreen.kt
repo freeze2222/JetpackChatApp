@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
@@ -27,8 +26,8 @@ import com.example.jetpackchatapp.ui.views.*
 
 @Composable
 fun AccountSettingsScreen(controller: NavController) {
-    val usernameViewModel = ViewModel()
-    val passwordViewModel = ViewModel()
+    val usernameMainViewModel = MainViewModel()
+    val passwordMainViewModel = MainViewModel()
     var username: String
     var password: String
     Surface(
@@ -100,7 +99,7 @@ fun AccountSettingsScreen(controller: NavController) {
                     EditText(
                         hint = descriptionData[7],
                         isPassword = false,
-                        viewModel = usernameViewModel
+                        mainViewModel = usernameMainViewModel
                     ) {
                         TextImageView(id = imageData[3])
                     }
@@ -112,7 +111,7 @@ fun AccountSettingsScreen(controller: NavController) {
                     EditText(
                         hint = descriptionData[6],
                         isPassword = false,
-                        viewModel = usernameViewModel
+                        mainViewModel = usernameMainViewModel
                     ) {
                         TextImageView(id = imageData[5])
                     }
@@ -123,14 +122,14 @@ fun AccountSettingsScreen(controller: NavController) {
                     Spacer(modifier = Modifier.height(8.dp))
                     EditText(
                         hint = descriptionData[2], isPassword = true,
-                        viewModel = passwordViewModel
+                        mainViewModel = passwordMainViewModel
                     ) {
                         TextImageView(id = imageData[4])
                     }
                     Spacer(modifier = Modifier.height(26.dp))
                     ChatButton(text = descriptionData[13]) {
-                        username = usernameViewModel.getText()
-                        password = passwordViewModel.getText()
+                        username = usernameMainViewModel.value.toString()
+                        password = passwordMainViewModel.value.toString()
                     }
                 }
             }

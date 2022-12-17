@@ -1,5 +1,6 @@
 package com.example.jetpackchatapp.repository
 
+import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
@@ -11,9 +12,7 @@ import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -39,39 +38,34 @@ fun parseMessage(text: String, from_user: String): MessageModel {
     return MessageModel(text, from_user)
 }
 
-fun getMessagesListData(chatModel: ChatModel, callback: Callback) {
-    val reference =
-        FirebaseDatabase.getInstance().reference.child("messages") .child(chatModel.chatUID.toString())
-    reference.get()
-        .addOnSuccessListener {
-            Log.e("RESULT",it.value.toString())
-            if (it.exists()) {
-                val data = (it.value as HashMap<*, *>).toList().toMutableList()
-                val list = ArrayList<Any>()
-                for (i in data) {
-                    list.add((i.second) as HashMap<*, *>)
-                }
-                val testList = ArrayList<Any>()
-                val result = ArrayList<MessageModel>()
-                for (i in list) {
-                    (i as HashMap<*, *>).toList().forEach { it1 ->
-                        testList.add(it1.second)
-                    }
-                }
-                var j = 1
-                while (j<testList.size){
-                    val message = MessageModel(
-                        text = testList[j-1] as String,
-                        from_user = testList[j] as String
-                    )
-                    result.add(message)
-                    j+=2
-                }
-
-                callback.call(result)
-            }
-
+fun setListener(chatModel: ChatModel):ArrayList<MessageModel>{
+    var messageList = ArrayList<MessageModel>()
+    val ref = FirebaseDatabase.getInstance().reference.child("messages").child(chatModel.chatUID.toString())
+    val messageListener = object : ChildEventListener {
+        override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+            val message: MessageModel =dataSnapshot.getValue(MessageModel::class.java)!!
+            messageList.add(message)
         }
+
+
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onChildRemoved(snapshot: DataSnapshot) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            Log.w(ContentValues.TAG, "loadPost:onCancelled")
+        }
+    }
+    ref.addChildEventListener(messageListener)
+    return messageList
 }
 
 fun getChatsListData(email: String, callback: Callback) {

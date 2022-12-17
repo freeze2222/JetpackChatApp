@@ -30,18 +30,14 @@ import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+
 
 @Composable
-fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
-    var value by remember {
-        mutableStateOf(arrayListOf(MessageModel()))
-    }
-    val messageViewModel = ViewModel()
-    val chatModel = data.chatModel!!
+fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
+    val chatModel = data.chatModel
+    data.init(chatModel)
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -128,16 +124,12 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
             ) {
                 Spacer(modifier = Modifier.height(45.dp))
 
-                getMessagesListData(chatModel, object :Callback{
-                    override fun call(T: Any?) {
-                        value = T as ArrayList<MessageModel>
-                    }
-                })
                 LazyColumn {
-                    items(items = value) { item ->
+                    items(items = data.messageList) { item ->
                         Message(data = item)
                     }
                 }
+
             }
                 Row(
                     Modifier
@@ -152,7 +144,7 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                         hint_size = 18.sp,
                         width = 270.dp,
                         height = 57.dp,
-                        viewModel = messageViewModel
+                        mainViewModel = data
                     ) {}
                     Spacer(modifier = Modifier.width(8.dp))
                     IconButton(
@@ -177,11 +169,10 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                                         object : Callback {
                                             override fun call(T: Any?) {
                                                 val message = parseMessage(
-                                                    messageViewModel.text,
+                                                    data.value.toString(),
                                                     T as String
                                                 )
                                                 sendMessage(message, chatModel.chatUID)
-                                                value.add(message)
 
                                             }
                                         })
@@ -191,14 +182,4 @@ fun ChatDetailsScreen(data: ViewModel, navController: NavController) {
                 }
             }
         }
-    val ref = FirebaseDatabase.getInstance().reference.child("messages").child(chatModel.chatUID.toString())
-    ref.addChildEventListener(object : ChildEventListener{
-        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            value.add(snapshot.getValue(MessageModel::class.java)!!)
-        }
-        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-        override fun onChildRemoved(snapshot: DataSnapshot) {}
-        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-        override fun onCancelled(error: DatabaseError) {}
-    })
     }

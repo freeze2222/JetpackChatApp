@@ -11,11 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.repository.login
@@ -24,9 +22,9 @@ import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.*
 
 @Composable
-fun SignInScreen(navController: NavController, viewModel: ViewModel) {
-    val emailViewModel = ViewModel()
-    val passwordViewModel = ViewModel()
+fun SignInScreen(navController: NavController, mainViewModel: MainViewModel) {
+    val emailMainViewModel = MainViewModel()
+    val passwordMainViewModel = MainViewModel()
     val context = LocalContext.current
 
     Surface(
@@ -69,7 +67,7 @@ fun SignInScreen(navController: NavController, viewModel: ViewModel) {
                     EditText(
                         hint = descriptionData[6],
                         isPassword = false,
-                        viewModel = emailViewModel
+                        mainViewModel = emailMainViewModel
                     ) {
                         TextImageView(id = imageData[3])
                     }
@@ -81,7 +79,7 @@ fun SignInScreen(navController: NavController, viewModel: ViewModel) {
                     EditText(
                         hint = descriptionData[2],
                         isPassword = true,
-                        viewModel = passwordViewModel
+                        mainViewModel = passwordMainViewModel
                     ) {
                         TextImageView(id = imageData[4])
                     }
@@ -89,8 +87,8 @@ fun SignInScreen(navController: NavController, viewModel: ViewModel) {
                     ChatButton(text = descriptionData[3]) {
                         login(
                             navController,
-                            emailViewModel.getText(),
-                            passwordViewModel.getText(),
+                            emailMainViewModel.value.toString(),
+                            passwordMainViewModel.value.toString(),
                             context
                         )
                     }

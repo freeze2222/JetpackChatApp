@@ -1,9 +1,9 @@
 package com.example.jetpackchatapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,19 +13,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.jetpackchatapp.model.UserModel
-import com.example.jetpackchatapp.model.data.Callback
-import com.example.jetpackchatapp.model.data.ViewModel
-import com.example.jetpackchatapp.repository.getContactListData
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.jetpackchatapp.model.data.MainViewModel
 import com.example.jetpackchatapp.ui.screens.*
 import com.example.jetpackchatapp.ui.theme.JetpackChatAppTheme
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     //private lateinit var database: DatabaseReference
+
+    val viewModel : MainViewModel by  viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,7 @@ class MainActivity : ComponentActivity() {
         //database.child("users").child("user04").setValue("user_changed")
 
         setContent {
-            val viewModel = ViewModel()
+         //   val mainViewModel = MainViewModel()
             JetpackChatAppTheme {
                 FrameScreen(viewModel)
             }

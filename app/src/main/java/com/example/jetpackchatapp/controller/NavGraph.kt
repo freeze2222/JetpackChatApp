@@ -4,8 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.jetpackchatapp.model.UserModel
-import com.example.jetpackchatapp.model.data.ViewModel
+import com.example.jetpackchatapp.model.data.MainViewModel
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.ui.screens.*
 
@@ -15,7 +14,7 @@ fun SetupNavGraph(
     navController: NavHostController,
     navFrameController: NavHostController? = null,
     isFrame: Boolean = false,
-    viewModel: ViewModel,
+    mainViewModel: MainViewModel,
     isLogged: Boolean = false
 ) {
     NavHost(
@@ -23,7 +22,7 @@ fun SetupNavGraph(
         startDestination = if (!isFrame) Screen.Chats.route else if (isLogged) Screen.Main.route else Screen.OnBoarding.route
     ) {
         composable(route = Screen.Chats.route) {
-            ChatsScreen(navFrameController!!, viewModel)
+            ChatsScreen(navFrameController!!, mainViewModel)
         }
         composable(route = Screen.Contacts.route) {
             ContactsScreen()
@@ -32,10 +31,10 @@ fun SetupNavGraph(
             ProfileScreen(navFrameController!!)
         }
         composable(route = Screen.SignIn.route) {
-            SignInScreen(navController = navController, viewModel)
+            SignInScreen(navController = navController, mainViewModel)
         }
         composable(route = Screen.Main.route) {
-            if (navFrameController != null) MainScreen(navFrameController, viewModel)
+            if (navFrameController != null) MainScreen(navFrameController, mainViewModel)
         }
         composable(route = Screen.SignUp.route) {
             CreateAccountScreen(navController)
@@ -44,10 +43,10 @@ fun SetupNavGraph(
             AccountSettingsScreen(navFrameController!!)
         }
         composable(route = Screen.OnBoarding.route) {
-            OnBoardingScreen(viewModel, navFrameController!!)
+            OnBoardingScreen(mainViewModel, navFrameController!!)
         }
         composable(route = Screen.ChatDetails.route) {
-            ChatDetailsScreen(viewModel, navFrameController!!)
+            ChatDetailsScreen(mainViewModel, navFrameController!!)
         }
     }
 }

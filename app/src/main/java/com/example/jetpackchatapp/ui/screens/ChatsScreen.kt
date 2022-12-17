@@ -14,13 +14,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
-import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.Callback
-import com.example.jetpackchatapp.model.data.ViewModel
+import com.example.jetpackchatapp.model.data.MainViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
 import com.example.jetpackchatapp.repository.getChatsListData
-import com.example.jetpackchatapp.repository.getContactListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.Chat
@@ -28,7 +26,7 @@ import com.example.jetpackchatapp.ui.views.ChatText
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun ChatsScreen(navController:NavController, viewModel: ViewModel) {
+fun ChatsScreen(navController:NavController, mainViewModel: MainViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +65,7 @@ fun ChatsScreen(navController:NavController, viewModel: ViewModel) {
                 Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
                     items(items = value) { item ->
-                        Chat(data = item, navController, viewModel = viewModel, value)
+                        Chat(data = item, navController, mainViewModel = mainViewModel, value)
                     }
                 }
             }

@@ -11,14 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.data.DATE_FORMAT
-import com.example.jetpackchatapp.model.data.ViewModel
+import com.example.jetpackchatapp.model.data.MainViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.imageData
 import com.example.jetpackchatapp.model.navigation.Screen
@@ -28,14 +26,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun Chat(data: ChatModel, navController: NavController, viewModel: ViewModel, list: List<ChatModel>) {
+fun Chat(data: ChatModel, navController: NavController, mainViewModel: MainViewModel, list: List<ChatModel>) {
     Surface(
         modifier = Modifier
             .padding(bottom = 11.dp)
             .fillMaxSize()
             .background(LightPurple)
             .clickable {
-                viewModel.setModel(data)
+                mainViewModel.chatModel = data
                 navController.navigate(Screen.ChatDetails.route)
             }
     ) {
