@@ -25,7 +25,7 @@ import com.example.jetpackchatapp.ui.theme.LightPurple
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         Screen.Chats,
-        Screen.Contacts,
+        //Screen.Contacts,
         Screen.Profile
     )
     BottomNavigation(

@@ -12,4 +12,5 @@ sealed class Screen(var route: String, var icon: Int?, var title: String?) {
     object Account : Screen("account", null,null)
     object OnBoarding : Screen("onBoarding", null,null)
     object ChatDetails : Screen("chatDetails", null,null)
+    object AddChats : Screen("addChats", null,null)
 }

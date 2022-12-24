@@ -1,17 +1,20 @@
 package com.example.jetpackchatapp.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,27 +24,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
-import com.example.jetpackchatapp.model.ChatModel
-import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.model.data.*
-import com.example.jetpackchatapp.repository.*
+import com.example.jetpackchatapp.repository.getAvatar
+import com.example.jetpackchatapp.repository.getUsername
+import com.example.jetpackchatapp.repository.parseMessage
+import com.example.jetpackchatapp.repository.sendMessage
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatText
 import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import androidx.compose.runtime.getValue
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
     val chatModel = data.chatModel
-    var messagesList = remember {
-        mutableStateListOf<MessageModel>()
+    val tmp = rememberLazyListState()
+    data.lazyListState = remember{
+        mutableStateOf(tmp)
     }
-    messagesList.addAll(data.messageList)
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -127,13 +132,11 @@ fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
                     )
             ) {
                 Spacer(modifier = Modifier.height(45.dp))
-
-                LazyColumn {
-                    items(items = data.testMutableList) { item ->
+                LazyColumn(state = data.lazyListState!!.value) {
+                    items(items = data.messageList.value) { item ->
                         Message(data = item)
                     }
                 }
-
             }
                 Row(
                     Modifier
@@ -177,7 +180,9 @@ fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
                                                     T as String
                                                 )
                                                 sendMessage(message, chatModel.chatUID)
-
+                                                data.coroutineScope.launch {
+                                                    data.lazyListState?.value?.animateScrollToItem(data.messageList.value.size - 1)
+                                                }
                                             }
                                         })
                                 }

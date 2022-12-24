@@ -37,7 +37,7 @@ fun Chat(data: ChatModel, navController: NavController, mainViewModel: MainViewM
             .clickable {
 
                 mainViewModel.testMutableList = messagesList
-                mainViewModel.setActiveChat(chatModel = data, object : Callback {
+                mainViewModel.setActiveChat(data, object : Callback {
                     override fun call(T: Any?) {
                         navController.navigate(Screen.ChatDetails.route)
                     }

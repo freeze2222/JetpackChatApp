@@ -48,5 +48,8 @@ fun SetupNavGraph(
         composable(route = Screen.ChatDetails.route) {
             ChatDetailsScreen(mainViewModel, navFrameController!!)
         }
+        composable(route = Screen.AddChats.route) {
+            AddChatScreen(navFrameController!!, mainViewModel)
+        }
     }
 }

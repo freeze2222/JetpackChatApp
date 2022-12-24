@@ -1,23 +1,28 @@
 package com.example.jetpackchatapp.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.jetpackchatapp.R
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.data.Callback
 import com.example.jetpackchatapp.model.data.MainViewModel
 import com.example.jetpackchatapp.model.data.boldFont
 import com.example.jetpackchatapp.model.data.titleData
+import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.repository.getChatsListData
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
@@ -27,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ChatsScreen(navController:NavController, mainViewModel: MainViewModel) {
+    mainViewModel.coroutineScope = rememberCoroutineScope()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -38,7 +44,20 @@ fun ChatsScreen(navController:NavController, mainViewModel: MainViewModel) {
                 .background(Purple)
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-            ChatText(text = titleData[2], fontFamily = boldFont, size = 24.sp)
+            Row(modifier = Modifier.fillMaxWidth()) {
+                ChatText(text = titleData[2], fontFamily = boldFont, size = 24.sp)
+                Spacer(modifier = Modifier.weight(1F))
+                FloatingActionButton(
+                    onClick = { navController.navigate(Screen.AddChats.route) },
+                    modifier = Modifier.padding(end = 20.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.plus_icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Column(
                 modifier = Modifier

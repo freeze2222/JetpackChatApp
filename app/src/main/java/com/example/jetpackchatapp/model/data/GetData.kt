@@ -21,7 +21,8 @@ val titleData = listOf(
     "Chats",
     "Contacts",
     "Settings",
-    "Account Settings" //5
+    "Account Settings", //5
+    "Add New Chat"
 )
 val descriptionData = listOf(
     "Username",
