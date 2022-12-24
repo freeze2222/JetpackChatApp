@@ -6,7 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,26 +15,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
-import com.example.jetpackchatapp.model.data.DATE_FORMAT
-import com.example.jetpackchatapp.model.data.MainViewModel
-import com.example.jetpackchatapp.model.data.boldFont
-import com.example.jetpackchatapp.model.data.imageData
+import com.example.jetpackchatapp.model.MessageModel
+import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.reflect.KProperty
 
 @Composable
 fun Chat(data: ChatModel, navController: NavController, mainViewModel: MainViewModel, list: List<ChatModel>) {
+    var messagesList = remember {
+        mutableStateListOf<MessageModel>()
+    }
     Surface(
         modifier = Modifier
             .padding(bottom = 11.dp)
             .fillMaxSize()
             .background(LightPurple)
             .clickable {
-                mainViewModel.chatModel = data
-                navController.navigate(Screen.ChatDetails.route)
+
+                mainViewModel.testMutableList = messagesList
+                mainViewModel.setActiveChat(chatModel = data, object : Callback {
+                    override fun call(T: Any?) {
+                        navController.navigate(Screen.ChatDetails.route)
+                    }
+                })
             }
     ) {
         Column(
@@ -115,3 +122,4 @@ fun Chat(data: ChatModel, navController: NavController, mainViewModel: MainViewM
         }
     }
 }
+

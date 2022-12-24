@@ -1,5 +1,6 @@
 package com.example.jetpackchatapp.model.data
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
@@ -7,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.MessageModel
 import com.example.jetpackchatapp.repository.setListener
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -18,20 +18,33 @@ import java.lang.Exception
 
 class MainViewModel : ViewModel() {
     var value:Any? = null
-    var messageList = ArrayList<MessageModel>()
+    lateinit var messageList : ArrayList<MessageModel>
     lateinit var currentUser : FirebaseUser
     lateinit var chatModel : ChatModel
-
+    lateinit var testMutableList: MutableList<MessageModel>
     fun init(chatModel: ChatModel) {
         this.chatModel = chatModel
         viewModelScope.launch {
-            setListener(chatModel, )
+            //setListener(chatModel, object : Callback {})
         }
 
     }
+    fun setActiveChat(chatModel: ChatModel, callback: Callback){
+        this.chatModel = chatModel
+        setListener(chatModel, object : Callback{
+            override fun call(T: Any?) {
+                messageList = T as ArrayList<MessageModel>
+                testMutableList.addAll(T)
+                callback.call(null)
+            }
+        })
+        viewModelScope.launch {
+
+        }
+    }
 }
 
-fun ReadText(): SnapshotStateList<String> {
+fun ReadText(): SnapshotStateList<MessageModel> {
     val _messages = mutableStateListOf<MessageModel>()
     try {
         val database = FirebaseDatabase.getInstance()
@@ -40,9 +53,9 @@ fun ReadText(): SnapshotStateList<String> {
         myRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val value = snapshot.getValue(HashMap::class.java)
-                if (value != null){
-                    _messages.add(value.values.)
-                }
+                //if (value != null){
+                    //_messages.add(value.values)
+                //}
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {

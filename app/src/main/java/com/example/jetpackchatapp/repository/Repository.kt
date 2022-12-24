@@ -38,7 +38,7 @@ fun parseMessage(text: String, from_user: String): MessageModel {
     return MessageModel(text, from_user)
 }
 
-fun setListener(chatModel: ChatModel):ArrayList<MessageModel>{
+fun setListener(chatModel: ChatModel, callback: Callback){
     var messageList = ArrayList<MessageModel>()
     val ref = FirebaseDatabase.getInstance().reference.child("messages").child(chatModel.chatUID.toString())
     val messageListener = object : ChildEventListener {
@@ -65,7 +65,7 @@ fun setListener(chatModel: ChatModel):ArrayList<MessageModel>{
         }
     }
     ref.addChildEventListener(messageListener)
-    return messageList
+    callback.call(messageList)
 }
 
 fun getChatsListData(email: String, callback: Callback) {

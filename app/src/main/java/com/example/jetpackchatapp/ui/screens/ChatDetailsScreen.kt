@@ -1,5 +1,6 @@
 package com.example.jetpackchatapp.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,13 +32,16 @@ import com.example.jetpackchatapp.ui.views.EditText
 import com.example.jetpackchatapp.ui.views.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import androidx.compose.runtime.getValue
 
 
 @Composable
 fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
     val chatModel = data.chatModel
-    data.init(chatModel)
-
+    var messagesList = remember {
+        mutableStateListOf<MessageModel>()
+    }
+    messagesList.addAll(data.messageList)
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -125,7 +129,7 @@ fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
                 Spacer(modifier = Modifier.height(45.dp))
 
                 LazyColumn {
-                    items(items = data.messageList) { item ->
+                    items(items = data.testMutableList) { item ->
                         Message(data = item)
                     }
                 }
