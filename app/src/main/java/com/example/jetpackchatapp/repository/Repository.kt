@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -51,10 +52,80 @@ fun parseMessage(text: String, from_user: String): MessageModel {
     return MessageModel(text, from_user)
 }
 
-fun addChat(callback: Callback, mainViewModel: MainViewModel, userToAdd: String) {
-    if (isEmailValid(mainViewModel.currentUser.email.toString()) && isEmailValid(userToAdd))
-        FirebaseDatabase.getInstance().reference.child("users")
-            .child(mainViewModel.currentUser.email!!.replace("@", "").replace(".", "")  )
+fun addChat(callback: Callback, currentUserEmailRaw: String, userToAddRaw: String) {
+    val currentUserEmail = currentUserEmailRaw.replace("@", "")
+                                              .replace(".", "")
+    val userToAdd = userToAddRaw.replace("@", "")
+                                .replace(".", "")
+    if (isEmailValid(currentUserEmailRaw) && isEmailValid(userToAddRaw)) {
+        Log.e("DEBUG","D")
+        val ref = FirebaseDatabase.getInstance().reference.child("users")
+            .child(
+                currentUserEmail
+                    .replace("@", "")
+                    .replace(".", "")
+            )
+            .child("chats")
+        ref.child("$currentUserEmail-$userToAdd").get().addOnSuccessListener { it ->
+            if (it.exists()) {
+                Log.e("DEBUG","D")
+                getChatModel(userToAdd, object : Callback {
+                    override fun call(T: Any?) {
+                        Log.e("DEBUG","F")
+                        callback.call(T)
+                    }
+                })
+            } else {
+                Log.e("DEBUG","E")
+                ref.child("$userToAdd-$currentUserEmail").get().addOnSuccessListener { it1 ->
+                    if (it1.exists()) {
+                        Log.e("DEBUG","ED")
+                        getChatModel(userToAdd, object : Callback {
+                            override fun call(T: Any?) {
+                                Log.e("DEBUG","EDD")
+                                callback.call(T)
+                            }
+                        })
+                    } else {
+                        Log.e("DEBUG","SD")
+                        ref.child(userToAdd).get().addOnSuccessListener {
+                            if (it.exists()) {
+                                Log.e("DEBUG","SDD")
+                                lateinit var currentChatModel: ChatModel
+                                lateinit var addingChatModel: ChatModel
+                                getChatModel(currentUserEmail, object : Callback {
+                                    override fun call(T: Any?) {
+                                        Log.e("DEBUG","SDDG")
+                                        currentChatModel = T as ChatModel
+                                        getChatModel(userToAdd, object : Callback {
+                                            override fun call(T: Any?) {
+                                                addingChatModel = T as ChatModel
+                                                ref.child(currentUserEmail).child("chats")
+                                                    .child("$currentUserEmail-$userToAdd")
+                                                    .setValue(addingChatModel)
+                                                ref.child(userToAdd).child("chats")
+                                                    .child("$userToAdd-$currentUserEmail")
+                                                    .setValue(currentChatModel)
+                                                callback.call(
+                                                    getChatModel(userToAdd, object : Callback {
+                                                        override fun call(T: Any?) {
+                                                            Log.e("DEBUG","SDDGE")
+                                                            callback.call(T)
+                                                        }
+                                                    })
+                                                )
+                                            }
+                                        })
+                                    }
+                                })
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 fun setListener(
@@ -72,24 +143,52 @@ fun setListener(
             messageList.add(message)
         }
 
-        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            TODO("Not yet implemented")
-        }
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
 
-        override fun onChildRemoved(snapshot: DataSnapshot) {
-            TODO("Not yet implemented")
-        }
+        override fun onChildRemoved(snapshot: DataSnapshot) {}
 
-        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            TODO("Not yet implemented")
-        }
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
-        override fun onCancelled(databaseError: DatabaseError) {
-            Log.w(ContentValues.TAG, "loadPost:onCancelled")
-        }
+        override fun onCancelled(databaseError: DatabaseError) {}
     }
     ref.addChildEventListener(messageListener)
     return messageList
+}
+
+fun getChatModel(email: String, callback: Callback) {
+    FirebaseDatabase.getInstance().reference.child("users").child(email).addChildEventListener(
+        object : ChildEventListener {
+
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val testList = ArrayList<Any>()
+                val result = ArrayList<ChatModel>()
+                (snapshot.value as HashMap<*, *>).toList().forEach { it1 ->
+                    testList.add(it1.second)
+                }
+                val chat = ChatModel(
+                    name = testList[2].toString(),
+                    lastSeen = testList[0] as Long,
+                    last_message = testList[5] as String,
+                    new_messages = (testList[1] as Long).toInt(),
+                    firstUID = testList[4] as Long,
+                    secondUID = testList[3] as Long,
+                    avatarRef = if ((testList[6] as String).isEmpty()) FirebaseDatabase.getInstance().reference.child(
+                        EMPTY_REFERENCE
+                    ) else FirebaseDatabase.getInstance().reference.child(
+                        testList[6].toString()
+                    ),
+                    chatUID = testList[7] as Long
+                )
+                result.add(chat)
+                callback.call(result)
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        }
+    )
 }
 
 fun getChatsListData(email: String, callback: Callback) {

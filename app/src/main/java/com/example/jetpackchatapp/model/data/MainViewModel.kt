@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.MessageModel
+import com.example.jetpackchatapp.repository.addChat
 import com.example.jetpackchatapp.repository.setListener
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
@@ -19,14 +20,23 @@ class MainViewModel : ViewModel() {
     lateinit var currentUser: FirebaseUser
     lateinit var chatModel: ChatModel
     lateinit var testMutableList: MutableList<MessageModel>
-    lateinit var coroutineScope : CoroutineScope
+    lateinit var coroutineScope: CoroutineScope
 
     fun setActiveChat(chatModel1: ChatModel, callback: Callback) {
         viewModelScope.launch {
             chatModel = chatModel1
-            messageList.value = setListener(chatModel, lazyListState, coroutineScope, messageList.value.size)
+            messageList.value =
+                setListener(chatModel, lazyListState, coroutineScope, messageList.value.size)
             callback.call(null)
-
         }
+    }
+
+    internal fun addChat(emailToAdd: String, callback: Callback) {
+        addChat(object : Callback {
+            override fun call(T: Any?) {
+                callback.call(T)
+            }
+
+        }, currentUserEmailRaw = currentUser.email!!, userToAddRaw = emailToAdd)
     }
 }

@@ -11,7 +11,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.data.*
+import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.repository.addChat
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.ChatButton
@@ -46,12 +48,15 @@ fun AddChatScreen(navController: NavHostController, mainViewModel: MainViewModel
             EditText(mainViewModel = valueViewModel, hint = "Email", isPassword = false) {}
             Spacer(modifier = Modifier.height(30.dp))
             ChatButton(text = "Add", padding_start = 0.dp) {
-                addChat(object : Callback {
+                mainViewModel.addChat(valueViewModel.value.toString(),object : Callback {
                     override fun call(T: Any?) {
-                        TODO("Not yet implemented")
+                        mainViewModel.setActiveChat(T as ChatModel, object: Callback{
+                            override fun call(T: Any?) {
+                                navController.navigate(Screen.ChatDetails.route)
+                            }
+                        })
                     }
-
-                }, mainViewModel = mainViewModel, valueViewModel.value.toString())
+                })
             }
         }
     }
