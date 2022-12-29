@@ -1,17 +1,13 @@
 package com.example.jetpackchatapp.repository
 
-import android.content.ContentValues
-import android.content.Context
+ import android.content.Context
 import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
 import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlin.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.MessageModel
@@ -20,15 +16,8 @@ import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 fun sendMessage(messageModel: MessageModel, uid: Long) {
     FirebaseDatabase.getInstance()
@@ -89,7 +78,6 @@ fun addChat(callback: Callback, currentUserEmailRaw: String, userToAddRaw: Strin
                     } else {
                         Log.e("DEBUG","SD")
                         ref.child(userToAdd).get().addOnSuccessListener {
-                            if (it.exists()) {
                                 Log.e("DEBUG","SDD")
                                 lateinit var currentChatModel: ChatModel
                                 lateinit var addingChatModel: ChatModel
@@ -118,8 +106,6 @@ fun addChat(callback: Callback, currentUserEmailRaw: String, userToAddRaw: Strin
                                         })
                                     }
                                 })
-
-                            }
                         }
                     }
                 }
@@ -330,7 +316,7 @@ fun createAccount(
             reference.setValue(
                 UserModel(
                     description = DEFAULT_DESCRIPTION,
-                    lastSeen = Calendar.getInstance().timeInMillis,
+                    lastSeen = System.currentTimeMillis(),
                     name = username,
                     UID = UUID.randomUUID().mostSignificantBits
                 )
