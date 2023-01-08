@@ -22,7 +22,7 @@ import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.*
 
 @Composable
-fun CreateAccountScreen(navController: NavController) {
+fun CreateAccountScreen(navController: NavController, mainViewModel: MainViewModel) {
     val usernameMainViewModel = MainViewModel()
     val emailMainViewModel = MainViewModel()
     val passwordMainViewModel = MainViewModel()
@@ -143,7 +143,8 @@ fun CreateAccountScreen(navController: NavController) {
                         emailMainViewModel.value.toString(),
                         passwordMainViewModel.value.toString(),
                         passwordConfirmationMainViewModel.value.toString(),
-                        context
+                        context,
+                        mainViewModel
                     )
                 }
             }

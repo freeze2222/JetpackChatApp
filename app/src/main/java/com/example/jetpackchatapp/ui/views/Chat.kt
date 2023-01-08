@@ -35,7 +35,6 @@ fun Chat(data: ChatModel, navController: NavController, mainViewModel: MainViewM
             .fillMaxSize()
             .background(LightPurple)
             .clickable {
-
                 mainViewModel.testMutableList = messagesList
                 mainViewModel.setActiveChat(data, object : Callback {
                     override fun call(T: Any?) {

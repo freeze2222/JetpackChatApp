@@ -21,8 +21,17 @@ fun MainScreen(navFrameController: NavHostController, mainViewModel: MainViewMod
         bottomBar = { BottomNavigationBar(navController) },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
-                SetupNavGraph(navController = navController, navFrameController, false, mainViewModel)
+
+                    println("surrent user ${FirebaseAuth.getInstance().currentUser}")
+                    mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
+
+
+                SetupNavGraph(
+                    navController = navController,
+                    navFrameController,
+                    false,
+                    mainViewModel
+                )
             }
         },
         backgroundColor = LightPurple

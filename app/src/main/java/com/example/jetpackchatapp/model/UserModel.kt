@@ -10,7 +10,7 @@ data class UserModel(
     val name: String = "",
     val description: String = "",
     val UID: Long = UUID.randomUUID().mostSignificantBits,
-    val avatarRef:DatabaseReference = FirebaseDatabase.getInstance().reference.child("null"), //TODO
+    val avatarRef:String = "null", //TODO
     val lastSeen: Long = 12.toLong(),
     val contacts: List<UserModel> = listOf(),
     val chats: List<ChatModel> = listOf(),

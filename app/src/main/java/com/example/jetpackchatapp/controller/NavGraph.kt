@@ -37,7 +37,7 @@ fun SetupNavGraph(
             if (navFrameController != null) MainScreen(navFrameController, mainViewModel)
         }
         composable(route = Screen.SignUp.route) {
-            CreateAccountScreen(navController)
+            CreateAccountScreen(navController, mainViewModel)
         }
         composable(route = Screen.Account.route) {
             AccountSettingsScreen(navFrameController!!)

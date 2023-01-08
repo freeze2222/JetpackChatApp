@@ -70,7 +70,6 @@ fun ChatsScreen(navController:NavController, mainViewModel: MainViewModel) {
                 var value by remember {
                     mutableStateOf(listOf(ChatModel()))
                 }
-
                 getChatsListData(
                     (FirebaseAuth.getInstance().currentUser!!.email)!!.replace(
                         "@",
