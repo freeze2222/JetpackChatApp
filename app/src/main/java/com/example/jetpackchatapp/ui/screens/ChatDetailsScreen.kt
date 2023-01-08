@@ -75,7 +75,7 @@ fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
                 }
                 Spacer(modifier = Modifier.width(17.dp))
                 Image(
-                    painter = if (chatModel.avatarRef != FirebaseDatabase.getInstance().getReference(EMPTY_REFERENCE)
+                    painter = if (chatModel.avatarRef != "null"
                     ) {
                         painterResource(getAvatar(chatModel.avatarRef))
                     } else {

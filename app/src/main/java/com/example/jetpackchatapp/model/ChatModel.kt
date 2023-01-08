@@ -10,7 +10,7 @@ data class ChatModel(
     val firstUID: Long = 0,
     val secondUID: Long = 0,
     val chatUID: Long = 0,
-    val avatarRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("null"),
+    val avatarRef: String = "null",
     val new_messages: Int = 0,
     val lastSeen: Long = Calendar.getInstance().timeInMillis
 )

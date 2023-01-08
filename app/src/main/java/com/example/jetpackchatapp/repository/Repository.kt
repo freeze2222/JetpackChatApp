@@ -1,6 +1,5 @@
 package com.example.jetpackchatapp.repository
 
-import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
@@ -8,10 +7,7 @@ import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlin.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.jetpackchatapp.model.ChatModel
 import com.example.jetpackchatapp.model.MessageModel
@@ -19,16 +15,12 @@ import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import kotlinx.coroutines.CoroutineName
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 fun sendMessage(messageModel: MessageModel, uid: Long) {
     FirebaseDatabase.getInstance()
@@ -58,75 +50,58 @@ fun addChat(callback: Callback, currentUserEmailRaw: String, userToAddRaw: Strin
     val userToAdd = userToAddRaw.replace("@", "")
         .replace(".", "")
     if (isEmailValid(currentUserEmailRaw) && isEmailValid(userToAddRaw)) {
-        Log.e("DEBUG", "D")
-        val ref = FirebaseDatabase.getInstance().reference.child("users")
-            .child(
-                currentUserEmail
-                    .replace("@", "")
-                    .replace(".", "")
-            )
-            .child("chats")
-        ref.child("$currentUserEmail-$userToAdd").get().addOnSuccessListener { it ->
-            if (it.exists()) {
-                Log.e("DEBUG", "D")
-                getChatModel(userToAdd, object : Callback {
-                    override fun call(T: Any?) {
-                        Log.e("DEBUG", "F")
-                        callback.call(T)
-                    }
-                })
-            } else {
-                Log.e("DEBUG", "E")
-                ref.child("$userToAdd-$currentUserEmail").get().addOnSuccessListener { it1 ->
-                    if (it1.exists()) {
-                        Log.e("DEBUG", "ED")
-                        getChatModel(userToAdd, object : Callback {
-                            override fun call(T: Any?) {
-                                Log.e("DEBUG", "EDD")
-                                callback.call(T)
-                            }
-                        })
-                    } else {
-                        Log.e("DEBUG", "SD")
-                        ref.child(userToAdd).get().addOnSuccessListener {
-                            if (it.exists()) {
-                                Log.e("DEBUG", "SDD")
-                                lateinit var currentChatModel: ChatModel
-                                lateinit var addingChatModel: ChatModel
-                                getChatModel(currentUserEmail, object : Callback {
-                                    override fun call(T: Any?) {
-                                        Log.e("DEBUG", "SDDG")
-                                        currentChatModel = T as ChatModel
-                                        getChatModel(userToAdd, object : Callback {
-                                            override fun call(T: Any?) {
-                                                addingChatModel = T as ChatModel
-                                                ref.child(currentUserEmail).child("chats")
-                                                    .child("$currentUserEmail-$userToAdd")
-                                                    .setValue(addingChatModel)
-                                                ref.child(userToAdd).child("chats")
-                                                    .child("$userToAdd-$currentUserEmail")
-                                                    .setValue(currentChatModel)
-                                                callback.call(
-                                                    getChatModel(userToAdd, object : Callback {
-                                                        override fun call(T: Any?) {
-                                                            Log.e("DEBUG", "SDDGE")
-                                                            callback.call(T)
-                                                        }
-                                                    })
-                                                )
-                                            }
-                                        })
-                                    }
-                                })
+        FirebaseDatabase.getInstance().reference.child("users").child(userToAdd).get()
+            .addOnSuccessListener {
+                if (it.exists()) {
+                    Log.e("DEBUG", "D")
+                    val ref = FirebaseDatabase.getInstance().reference.child("users")
+                    ref.child(currentUserEmail).child("chats").child("$currentUserEmail-$userToAdd")
+                        .get().addOnSuccessListener {
+                            Log.e("DEBUG", "E")
+                            ref.child(currentUserEmail).child("chats")
+                                .child("$userToAdd-$currentUserEmail").get()
+                                .addOnSuccessListener { it1 ->
+                                    lateinit var currentChatModel: ChatModel
+                                    lateinit var addingChatModel: ChatModel
 
-                            }
+                                    if (!it1.exists()) {
+                                        Log.e("DEBUG", "SD")
+                                        getChatModel(currentUserEmail, object : Callback {
+                                            override fun call(T: Any?) {
+                                                Log.e("DEBUG", "SDDG")
+                                                currentChatModel = T as ChatModel
+                                                getChatModel(userToAdd, object : Callback {
+                                                    override fun call(T: Any?) {
+                                                        Log.e("DEBUG", "SDDGR")
+                                                        addingChatModel = T as ChatModel
+                                                        ref.child(currentUserEmail).child("chats")
+                                                            .child("$currentUserEmail-$userToAdd")
+                                                            .setValue(addingChatModel)
+                                                            .addOnSuccessListener {
+                                                                ref.child(userToAdd).child("chats")
+                                                                    .child("$userToAdd-$currentUserEmail")
+                                                                    .setValue(currentChatModel)
+                                                                    .addOnSuccessListener {
+                                                                        callback.call(
+                                                                            addingChatModel
+                                                                        )
+                                                                    }
+                                                            }
+
+
+                                                    }
+                                                }, currentChatModel.chatUID, currentUserEmail)
+                                            }
+                                        }, 0, userToAdd)
+                                    }
+                                }
                         }
-                    }
                 }
             }
-        }
     }
+
 }
+
 
 fun setListener(
     chatModel: ChatModel,
@@ -152,47 +127,69 @@ fun setListener(
         override fun onCancelled(databaseError: DatabaseError) {}
     }
     ref.addChildEventListener(messageListener)
-    if (messageList.size == 1){
+    if (messageList.size == 1) {
         messageList.clear()
         return messageList
-    }
-    else return messageList
+    } else return messageList
 }
 
-fun getChatModel(email: String, callback: Callback) {
-    FirebaseDatabase.getInstance().reference.child("users").child(email).addChildEventListener(
-        object : ChildEventListener {
+fun getChatModel(email: String, callback: Callback, chatUID: Long, secondEmail: String) {
+    var counter = 0
+    val testList = ArrayList<Any>()
+    var secondUID: Long = 0
+    FirebaseDatabase.getInstance().reference.child("users").child(secondEmail)
+        .child("uid").get().addOnSuccessListener {
+            secondUID = it.value as Long
+        }.addOnSuccessListener {
+            FirebaseDatabase.getInstance().reference.child("users").child(email)
+                .addChildEventListener(
+                    object : ChildEventListener {
 
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val testList = ArrayList<Any>()
-                val result = ArrayList<ChatModel>()
-                (snapshot.value as HashMap<*, *>).toList().forEach { it1 ->
-                    testList.add(it1.second)
-                }
-                val chat = ChatModel(
-                    name = testList[2].toString(),
-                    lastSeen = testList[0] as Long,
-                    last_message = testList[5] as String,
-                    new_messages = (testList[1] as Long).toInt(),
-                    firstUID = testList[4] as Long,
-                    secondUID = testList[3] as Long,
-                    avatarRef = if ((testList[6] as String).isEmpty()) FirebaseDatabase.getInstance().reference.child(
-                        EMPTY_REFERENCE
-                    ) else FirebaseDatabase.getInstance().reference.child(
-                        testList[6].toString()
-                    ),
-                    chatUID = testList[7] as Long
+                        override fun onChildAdded(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                            Log.e("DEBUG", "Start")
+                            if (snapshot.key != "chats" && snapshot.key != "contacts") {
+                                testList.add(snapshot.value!!)
+                                counter++
+                            } else {
+                                Log.e("DEBUG", "Chats or contacts detected")
+                            }
+
+                            Log.e("DEBUG", testList.toString())
+                            if (counter == 5) {
+                                val chat = ChatModel(
+                                    name = testList[3].toString(),
+                                    lastSeen = testList[2] as Long,
+                                    last_message = "",
+                                    new_messages = 0,
+                                    firstUID = testList[4] as Long,
+                                    secondUID = secondUID,
+                                    avatarRef = "null",
+                                    chatUID = (if (chatUID != 0.toLong()) chatUID else UUID.randomUUID().mostSignificantBits) as Long
+                                )
+                                callback.call(chat)
+                            }
+                        }
+
+                        override fun onChildChanged(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
+
+                        override fun onChildRemoved(snapshot: DataSnapshot) {}
+                        override fun onChildMoved(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {}
+                    }
                 )
-                result.add(chat)
-                callback.call(result)
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) {}
         }
-    )
 }
 
 fun getChatsListData(email: String, callback: Callback) {
@@ -212,19 +209,16 @@ fun getChatsListData(email: String, callback: Callback) {
                     (i as HashMap<*, *>).toList().forEach { it1 ->
                         testList.add(it1.second)
                     }
+                    Log.e("DEBUG", "SecondUID: $testList")
                     val chat = ChatModel(
-                        name = testList[2].toString(),
+                        name = testList[3].toString(),
                         lastSeen = testList[0] as Long,
-                        last_message = testList[5] as String,
-                        new_messages = (testList[1] as Long).toInt(),
-                        firstUID = testList[4] as Long,
-                        secondUID = testList[3] as Long,
-                        avatarRef = if ((testList[6] as String).isEmpty()) FirebaseDatabase.getInstance().reference.child(
-                            EMPTY_REFERENCE
-                        ) else FirebaseDatabase.getInstance().reference.child(
-                            testList[6].toString()
-                        ),
-                        chatUID = testList[7] as Long
+                        last_message = testList[7] as String,
+                        new_messages = (testList[2] as Long).toInt(),
+                        firstUID = testList[6] as Long,
+                        secondUID = testList[4] as Long,
+                        avatarRef = if ((testList[5] as String) == "null") "null" else testList[6].toString(),
+                        chatUID = testList[1] as Long
                     )
                     result.add(chat)
                 }
@@ -234,7 +228,7 @@ fun getChatsListData(email: String, callback: Callback) {
         }
 }
 
-fun getAvatar(avatarRef: DatabaseReference): Int {
+fun getAvatar(avatarRef: String): Int {
     return 0
 }
 
@@ -325,26 +319,26 @@ fun createAccount(
     FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener {
         val isNewUser = it.result.signInMethods!!.isEmpty()
         if (isNewUser) {
-                FirebaseDatabase
-                    .getInstance()
-                    .reference
-                    .child("users")
-                    .child(email.replace("@", "").replace(".", ""))
-                    .setValue(
-                UserModel(
-                    description = DEFAULT_DESCRIPTION,
-                    lastSeen = Calendar.getInstance().timeInMillis,
-                    name = username,
-                    UID = UUID.randomUUID().mostSignificantBits
+            FirebaseDatabase
+                .getInstance()
+                .reference
+                .child("users")
+                .child(email.replace("@", "").replace(".", ""))
+                .setValue(
+                    UserModel(
+                        description = DEFAULT_DESCRIPTION,
+                        lastSeen = Calendar.getInstance().timeInMillis,
+                        name = username,
+                        UID = UUID.randomUUID().mostSignificantBits
+                    )
                 )
-            )
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                    .addOnSuccessListener {
-                        mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
-                        navController.navigate(Screen.Main.route) {
-                            navController.popBackStack()
-                        }
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
+                    navController.navigate(Screen.Main.route) {
+                        navController.popBackStack()
                     }
+                }
         } else {
             Toast.makeText(context, "User is already registered", Toast.LENGTH_SHORT).show()
         }
