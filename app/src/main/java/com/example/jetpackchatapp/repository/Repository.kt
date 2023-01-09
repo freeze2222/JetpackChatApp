@@ -208,19 +208,22 @@ fun getChatsListData(email: String, callback: Callback) {
                 for (i in list) {
                     (i as HashMap<*, *>).toList().forEach { it1 ->
                         testList.add(it1.second)
+                        if (testList.size%8==0){
+                            val chat = ChatModel(
+                                name = testList[3].toString(),
+                                lastSeen = testList[0] as Long,
+                                last_message = testList[7] as String,
+                                new_messages = (testList[2] as Long).toInt(),
+                                firstUID = testList[6] as Long,
+                                secondUID = testList[4] as Long,
+                                avatarRef = if ((testList[5] as String) == "null") "null" else testList[6].toString(),
+                                chatUID = testList[1] as Long
+                            )
+                            result.add(chat)
+                            testList.clear()
+                        }
                     }
                     Log.e("DEBUG", "SecondUID: $testList")
-                    val chat = ChatModel(
-                        name = testList[3].toString(),
-                        lastSeen = testList[0] as Long,
-                        last_message = testList[7] as String,
-                        new_messages = (testList[2] as Long).toInt(),
-                        firstUID = testList[6] as Long,
-                        secondUID = testList[4] as Long,
-                        avatarRef = if ((testList[5] as String) == "null") "null" else testList[6].toString(),
-                        chatUID = testList[1] as Long
-                    )
-                    result.add(chat)
                 }
                 Log.e("DEBUG", result.toString())
                 callback.call(result)
@@ -284,7 +287,7 @@ fun login(
     FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
         .addOnSuccessListener {
             navController.navigate(Screen.Main.route) {
-                navController.popBackStack()
+                navController.popBackStack() //TODO
             }
         }.addOnFailureListener {
             Toast.makeText(context, "Incorrect credentials", Toast.LENGTH_SHORT).show()
@@ -337,6 +340,7 @@ fun createAccount(
                     mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
                     navController.navigate(Screen.Main.route) {
                         navController.popBackStack()
+
                     }
                 }
         } else {
