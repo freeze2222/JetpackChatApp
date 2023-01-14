@@ -8,7 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.jetpackchatapp.controller.SetupNavGraph
+import com.example.jetpackchatapp.model.data.Callback
 import com.example.jetpackchatapp.model.data.MainViewModel
+import com.example.jetpackchatapp.repository.getName
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.views.BottomNavigationBar
 import com.google.firebase.auth.FirebaseAuth
@@ -22,10 +24,13 @@ fun MainScreen(navFrameController: NavHostController, mainViewModel: MainViewMod
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
 
-                    println("surrent user ${FirebaseAuth.getInstance().currentUser}")
-                    mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
+                mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
+                getName(callback = object : Callback{
+                    override fun call(T: Any?) {
+                        mainViewModel.name = T.toString()
+                    }
 
-
+                })
                 SetupNavGraph(
                     navController = navController,
                     navFrameController,

@@ -21,6 +21,7 @@ class MainViewModel : ViewModel() {
     lateinit var chatModel: ChatModel
     lateinit var testMutableList: MutableList<MessageModel>
     lateinit var coroutineScope: CoroutineScope
+    lateinit var name: String
 
     fun setActiveChat(chatModel1: ChatModel, callback: Callback) {
         viewModelScope.launch {

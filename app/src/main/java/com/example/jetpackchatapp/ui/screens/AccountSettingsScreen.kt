@@ -20,16 +20,20 @@ import androidx.navigation.NavController
 import com.example.jetpackchatapp.R
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
+import com.example.jetpackchatapp.repository.changeCredentials
+import com.example.jetpackchatapp.repository.isPasswordValid
+import com.example.jetpackchatapp.repository.isUsernameValid
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @Composable
 fun AccountSettingsScreen(controller: NavController) {
     val usernameMainViewModel = MainViewModel()
     val passwordMainViewModel = MainViewModel()
-    var username: String
-    var password: String
+    val passwordConfirmationMainViewModel = MainViewModel()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Purple
@@ -43,7 +47,7 @@ fun AccountSettingsScreen(controller: NavController) {
             Spacer(modifier = Modifier.height(30.dp))
             Row {
                 IconButton(onClick = {
-                    controller.navigate(Screen.Main.route){
+                    controller.navigate(Screen.Main.route) {
                         controller.popBackStack()
                     }
                 }) {
@@ -106,19 +110,19 @@ fun AccountSettingsScreen(controller: NavController) {
                     Spacer(modifier = Modifier.height(21.dp))
                     Separator()
                     Spacer(modifier = Modifier.height(13.dp))
-                    ChatText(text = descriptionData[5])
+                    ChatText(text = descriptionData[1])
                     Spacer(modifier = Modifier.height(8.dp))
                     EditText(
-                        hint = descriptionData[6],
-                        isPassword = false,
+                        hint = descriptionData[2],
+                        isPassword = true,
                         mainViewModel = usernameMainViewModel
                     ) {
-                        TextImageView(id = imageData[5])
+                        TextImageView(id = imageData[4])
                     }
                     Spacer(modifier = Modifier.height(29.dp))
                     Separator()
                     Spacer(modifier = Modifier.height(21.dp))
-                    ChatText(text = descriptionData[1])
+                    ChatText(text = descriptionData[14])
                     Spacer(modifier = Modifier.height(8.dp))
                     EditText(
                         hint = descriptionData[2], isPassword = true,
@@ -128,8 +132,15 @@ fun AccountSettingsScreen(controller: NavController) {
                     }
                     Spacer(modifier = Modifier.height(26.dp))
                     ChatButton(text = descriptionData[13]) {
-                        username = usernameMainViewModel.value.toString()
-                        password = passwordMainViewModel.value.toString()
+                        val username = usernameMainViewModel.value.toString()
+                        val password = passwordMainViewModel.value.toString()
+                        val passwordConfirmation =
+                            passwordConfirmationMainViewModel.value.toString()
+                        changeCredentials(callback = object : Callback{
+                            override fun call(T: Any?) {
+
+                            }
+                        },username,password,passwordConfirmation)
                     }
                 }
             }

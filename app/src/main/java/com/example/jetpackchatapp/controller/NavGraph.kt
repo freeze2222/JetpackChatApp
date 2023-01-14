@@ -28,7 +28,7 @@ fun SetupNavGraph(
             ContactsScreen()
         }
         composable(route = Screen.Profile.route) {
-            ProfileScreen(navFrameController!!)
+            ProfileScreen(navFrameController!!, mainViewModel)
         }
         composable(route = Screen.SignIn.route) {
             SignInScreen(navController = navController, mainViewModel)

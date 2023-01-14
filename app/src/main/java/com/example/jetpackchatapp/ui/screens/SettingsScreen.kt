@@ -31,7 +31,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlin.system.exitProcess
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(navController: NavController, mainViewModel: MainViewModel) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Purple
@@ -71,7 +71,7 @@ fun ProfileScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     ChatText(
-                        text = "Username",
+                        text = mainViewModel.name,
                         fontFamily = boldFont,
                         size = 24.sp,
                         padding_start = 0.dp

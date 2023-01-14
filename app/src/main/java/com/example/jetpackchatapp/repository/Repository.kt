@@ -208,7 +208,7 @@ fun getChatsListData(email: String, callback: Callback) {
                 for (i in list) {
                     (i as HashMap<*, *>).toList().forEach { it1 ->
                         testList.add(it1.second)
-                        if (testList.size%8==0){
+                        if (testList.size % 8 == 0) {
                             val chat = ChatModel(
                                 name = testList[3].toString(),
                                 lastSeen = testList[0] as Long,
@@ -352,6 +352,36 @@ fun createAccount(
 fun isUserOnline(chatModel: ChatModel): Boolean {
     val time = chatModel.lastSeen
     return time - Calendar.getInstance().timeInMillis < 0
+}
+
+fun changeCredentials(
+    callback: Callback,
+    username: String,
+    password: String,
+    passwordConfirmation: String,
+) {
+    val email =
+        FirebaseAuth.getInstance().currentUser!!.email!!.replace("@", ".")
+            .replace(".", "")
+    if (isUsernameValid(username) && isPasswordValid(
+            password,
+            passwordConfirmation
+        )
+    ) {
+        FirebaseAuth.getInstance().currentUser!!.updatePassword(password)
+        FirebaseDatabase.getInstance().reference.child("users").child(email)
+            .child("username").setValue(username).addOnSuccessListener {
+                callback.call("")
+            }
+    }
+}
+
+fun getName(callback: Callback) {
+    val email = FirebaseAuth.getInstance().currentUser!!.email!!.replace("@", "").replace(".", "")
+    val ref = FirebaseDatabase.getInstance().reference.child("users").child(email).child("name")
+    val name = ref.get().addOnSuccessListener {
+        callback.call(it.value.toString())
+    }
 }
 
 fun isEmailValid(string: String): Boolean {
