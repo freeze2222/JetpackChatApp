@@ -1,5 +1,6 @@
 package com.example.jetpackchatapp.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,6 +33,14 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ChatsScreen(navController:NavController, mainViewModel: MainViewModel) {
+    var value by remember {
+        mutableStateOf(mutableListOf(ChatModel()))
+    }
+    if (value.size!=0) {
+        if (value[0].name == "") {
+            value.removeAt(0)
+        }
+    }
     mainViewModel.coroutineScope = rememberCoroutineScope()
     Surface(
         modifier = Modifier
@@ -67,19 +76,17 @@ fun ChatsScreen(navController:NavController, mainViewModel: MainViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(46.dp))
-                var value by remember {
-                    mutableStateOf(listOf(ChatModel()))
-                }
                 getChatsListData(
                     (FirebaseAuth.getInstance().currentUser!!.email)!!.replace(
                         "@",
                         ""
                     ).replace(".", ""), object : Callback {
                         override fun call(T: Any?) {
-                            val list = T as List<ChatModel>
+                            val list = (T as List<ChatModel>).toMutableList()
                             value = list
                         }
                     })
+
                 Spacer(modifier = Modifier.width(15.dp))
                 LazyColumn {
                     items(items = value) { item ->
@@ -100,3 +107,4 @@ fun ChatsScreen(navController:NavController, mainViewModel: MainViewModel) {
         }
     }
 }
+

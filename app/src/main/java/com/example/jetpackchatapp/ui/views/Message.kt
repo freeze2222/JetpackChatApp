@@ -1,5 +1,6 @@
 package com.example.jetpackchatapp.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,7 +20,10 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun Message(data: MessageModel) {
+    Log.e("Debug",data.from_user)
     val isFromMe = FirebaseAuth.getInstance().currentUser!!.displayName == data.from_user
+    Log.e("Debug", isFromMe.toString())
+    Log.e("Debug", FirebaseAuth.getInstance().currentUser!!.toString())
     val color = if (isFromMe) Coral else DarkViolet
     Surface(
         modifier = Modifier

@@ -15,6 +15,8 @@ import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -226,6 +228,7 @@ fun getChatsListData(email: String, callback: Callback) {
                     Log.e("DEBUG", "SecondUID: $testList")
                 }
                 Log.e("DEBUG", result.toString())
+
                 callback.call(result)
             }
         }
@@ -338,6 +341,10 @@ fun createAccount(
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
+                    val profileUpdates = userProfileChangeRequest {
+                        displayName = username
+                    }
+                    mainViewModel.currentUser.updateProfile(profileUpdates)
                     navController.navigate(Screen.Main.route) {
                         navController.popBackStack()
 

@@ -14,7 +14,7 @@ fun OnBoardingScreen(mainViewModel: MainViewModel, navFrameController:NavHostCon
             val controller = rememberNavController()
             SetupNavGraph(navController = controller, mainViewModel = mainViewModel, navFrameController = navFrameController)
             controller.navigate(Screen.SignIn.route){
-                controller.popBackStack()
+                popUpTo(controller.graph.id)
             }
         }
 }

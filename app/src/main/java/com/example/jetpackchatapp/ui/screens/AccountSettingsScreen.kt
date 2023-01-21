@@ -138,7 +138,9 @@ fun AccountSettingsScreen(controller: NavController) {
                             passwordConfirmationMainViewModel.value.toString()
                         changeCredentials(callback = object : Callback{
                             override fun call(T: Any?) {
-
+                                controller.navigate(Screen.Main.route) {
+                                    controller.popBackStack()
+                                }
                             }
                         },username,password,passwordConfirmation)
                     }
