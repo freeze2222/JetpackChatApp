@@ -33,7 +33,9 @@ fun AddChatScreen(navController: NavHostController, mainViewModel: MainViewModel
         ) {
             Spacer(modifier = Modifier.height(20.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
-                IconButton(onClick = { navController.popBackStack() }) {
+                IconButton(onClick = { navController.navigate(Screen.Main.route){
+                    popUpTo(navController.graph.id)
+                } }) {
                     Image(
                         painter = painterResource(id = imageData[7]),
                         contentDescription = null,

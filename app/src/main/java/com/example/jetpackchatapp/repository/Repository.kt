@@ -1,6 +1,8 @@
 package com.example.jetpackchatapp.repository
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
 import android.widget.Toast
@@ -15,7 +17,6 @@ import com.example.jetpackchatapp.model.UserModel
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -151,7 +152,6 @@ fun getChatModel(email: String, callback: Callback, chatUID: Long, secondEmail: 
                             snapshot: DataSnapshot,
                             previousChildName: String?
                         ) {
-                            Log.e("DEBUG", "Start")
                             if (snapshot.key != "chats" && snapshot.key != "contacts") {
                                 testList.add(snapshot.value!!)
                                 counter++
@@ -159,7 +159,6 @@ fun getChatModel(email: String, callback: Callback, chatUID: Long, secondEmail: 
                                 Log.e("DEBUG", "Chats or contacts detected")
                             }
 
-                            Log.e("DEBUG", testList.toString())
                             if (counter == 5) {
                                 val chat = ChatModel(
                                     name = testList[3].toString(),
@@ -280,7 +279,7 @@ fun login(
         return
     }
     if (!isStringValid(email, EMAIL)) {
-        Toast.makeText(context, "Username is not valid", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Email is not valid", Toast.LENGTH_SHORT).show()
         return
     }
     if (!isStringValid(password, PASSWORD)) {
@@ -290,7 +289,7 @@ fun login(
     FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
         .addOnSuccessListener {
             navController.navigate(Screen.Main.route) {
-                navController.popBackStack() //TODO
+                popUpTo(navController.graph.id)
             }
         }.addOnFailureListener {
             Toast.makeText(context, "Incorrect credentials", Toast.LENGTH_SHORT).show()
@@ -322,37 +321,42 @@ fun createAccount(
         Toast.makeText(context, ERROR_EMAIL, Toast.LENGTH_SHORT).show()
         return
     }
-    FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener {
-        val isNewUser = it.result.signInMethods!!.isEmpty()
-        if (isNewUser) {
-            FirebaseDatabase
-                .getInstance()
-                .reference
-                .child("users")
-                .child(email.replace("@", "").replace(".", ""))
-                .setValue(
-                    UserModel(
-                        description = DEFAULT_DESCRIPTION,
-                        lastSeen = Calendar.getInstance().timeInMillis,
-                        name = username,
-                        UID = UUID.randomUUID().mostSignificantBits
+    if (checkInternet(context)) {
+        FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener {
+            val isNewUser = it.result.signInMethods!!.isEmpty()
+            if (isNewUser) {
+                FirebaseDatabase
+                    .getInstance()
+                    .reference
+                    .child("users")
+                    .child(email.replace("@", "").replace(".", ""))
+                    .setValue(
+                        UserModel(
+                            description = DEFAULT_DESCRIPTION,
+                            lastSeen = Calendar.getInstance().timeInMillis,
+                            name = username,
+                            UID = UUID.randomUUID().mostSignificantBits
+                        )
                     )
-                )
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
-                    val profileUpdates = userProfileChangeRequest {
-                        displayName = username
+                Log.e("Debug", "Start3")
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                    .addOnSuccessListener {
+                        Log.e("Debug", "Start4")
+                        mainViewModel.currentUser = FirebaseAuth.getInstance().currentUser!!
+                        val profileUpdates = userProfileChangeRequest {
+                            displayName = username
+                        }
+                        mainViewModel.currentUser.updateProfile(profileUpdates)
+                        navController.navigate(Screen.Main.route) {
+                            popUpTo(navController.graph.id)
+                        }
                     }
-                    mainViewModel.currentUser.updateProfile(profileUpdates)
-                    navController.navigate(Screen.Main.route) {
-                        navController.popBackStack()
-
-                    }
-                }
-        } else {
-            Toast.makeText(context, "User is already registered", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "User is already registered", Toast.LENGTH_SHORT).show()
+            }
         }
+    } else {
+        Toast.makeText(context, "Check Internet", Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -362,25 +366,40 @@ fun isUserOnline(chatModel: ChatModel): Boolean {
 }
 
 fun changeCredentials(
-    callback: Callback,
     username: String,
     password: String,
     passwordConfirmation: String,
+    context: Context,
+    navController: NavController
 ) {
+    Log.e("DEBUG", "$username $password $passwordConfirmation")
     val email =
         FirebaseAuth.getInstance().currentUser!!.email!!.replace("@", ".")
             .replace(".", "")
-    if (isUsernameValid(username) && isPasswordValid(
-            password,
-            passwordConfirmation
-        )
-    ) {
-        FirebaseAuth.getInstance().currentUser!!.updatePassword(password)
-        FirebaseDatabase.getInstance().reference.child("users").child(email)
-            .child("username").setValue(username).addOnSuccessListener {
-                callback.call("")
-            }
+    if (username.isEmpty() || email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()) {
+        Toast.makeText(context, ERROR_EMPTY, Toast.LENGTH_SHORT).show()
+        return
     }
+    if (!isUsernameValid(username)) {
+        Toast.makeText(context, ERROR_USERNAME, Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (!isPasswordValid(password, passwordConfirmation)) {
+        Toast.makeText(context, ERROR_PASSWORD, Toast.LENGTH_SHORT).show()
+        return
+    }
+
+
+    Log.e("DEBUG", "Start2")
+    FirebaseAuth.getInstance().currentUser!!.updatePassword(password)
+    FirebaseDatabase.getInstance().reference.child("users").child(email)
+        .child("name").setValue(username).addOnSuccessListener {
+            Log.e("DEBUG", "Start3")
+            //FirebaseAuth.getInstance().signOut()
+            //exitProcess(0)
+            navController.popBackStack()
+
+        }
 }
 
 fun getName(callback: Callback) {
@@ -400,8 +419,11 @@ fun isUsernameValid(string: String): Boolean {
 }
 
 fun isPasswordValid(string: String, stringConfirmation: String): Boolean {
+    Log.e("Debug", "V1")
     return if (string.isNotEmpty() && stringConfirmation.isNotEmpty()) {
+        Log.e("Debug", "V2")
         if (isStringValid(string, PASSWORD) && isStringValid(stringConfirmation, PASSWORD)) {
+            Log.e("Debug", "V3")
             string == stringConfirmation
         } else {
             false
@@ -412,8 +434,8 @@ fun isPasswordValid(string: String, stringConfirmation: String): Boolean {
 }
 
 fun isStringValid(string: String, type: String): Boolean {
-    val usernameRegex = """^[A-Za-z][A-Za-z0-9_]{3,16}$""".toRegex()
-    val passwordRegex = """^[0-9A-Za-z][A-Za-z0-9_!-&$*-/:-=]{3,16}$""".toRegex()
+    val usernameRegex = """^[A-Za-z][A-Za-z0-9_]{2,16}$""".toRegex()
+    val passwordRegex = """^[0-9A-Za-z][A-Za-z0-9_!-&$*-/:-=]{5,16}$""".toRegex()
     return when (type) {
         "email" -> {
             EMAIL_ADDRESS.matcher(string).matches()
@@ -426,4 +448,17 @@ fun isStringValid(string: String, type: String): Boolean {
         }
         else -> false
     }
+}
+
+fun checkInternet(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return when {
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        else -> false
+    }
+
 }

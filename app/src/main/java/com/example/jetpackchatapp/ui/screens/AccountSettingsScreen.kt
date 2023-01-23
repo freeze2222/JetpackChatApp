@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -21,19 +22,16 @@ import com.example.jetpackchatapp.R
 import com.example.jetpackchatapp.model.data.*
 import com.example.jetpackchatapp.model.navigation.Screen
 import com.example.jetpackchatapp.repository.changeCredentials
-import com.example.jetpackchatapp.repository.isPasswordValid
-import com.example.jetpackchatapp.repository.isUsernameValid
 import com.example.jetpackchatapp.ui.theme.LightPurple
 import com.example.jetpackchatapp.ui.theme.Purple
 import com.example.jetpackchatapp.ui.views.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 
 @Composable
 fun AccountSettingsScreen(controller: NavController) {
     val usernameMainViewModel = MainViewModel()
     val passwordMainViewModel = MainViewModel()
     val passwordConfirmationMainViewModel = MainViewModel()
+    val context = LocalContext.current
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Purple
@@ -115,7 +113,7 @@ fun AccountSettingsScreen(controller: NavController) {
                     EditText(
                         hint = descriptionData[2],
                         isPassword = true,
-                        mainViewModel = usernameMainViewModel
+                        mainViewModel = passwordMainViewModel
                     ) {
                         TextImageView(id = imageData[4])
                     }
@@ -126,7 +124,7 @@ fun AccountSettingsScreen(controller: NavController) {
                     Spacer(modifier = Modifier.height(8.dp))
                     EditText(
                         hint = descriptionData[2], isPassword = true,
-                        mainViewModel = passwordMainViewModel
+                        mainViewModel = passwordConfirmationMainViewModel
                     ) {
                         TextImageView(id = imageData[4])
                     }
@@ -136,13 +134,13 @@ fun AccountSettingsScreen(controller: NavController) {
                         val password = passwordMainViewModel.value.toString()
                         val passwordConfirmation =
                             passwordConfirmationMainViewModel.value.toString()
-                        changeCredentials(callback = object : Callback{
-                            override fun call(T: Any?) {
-                                controller.navigate(Screen.Main.route) {
-                                    controller.popBackStack()
-                                }
-                            }
-                        },username,password,passwordConfirmation)
+                        changeCredentials(
+                            username,
+                            password,
+                            passwordConfirmation,
+                            context,
+                            controller
+                        )
                     }
                 }
             }

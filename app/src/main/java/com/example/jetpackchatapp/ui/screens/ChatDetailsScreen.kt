@@ -183,6 +183,7 @@ fun ChatDetailsScreen(data: MainViewModel, navController: NavController) {
                                                 data.coroutineScope.launch {
                                                     data.lazyListState?.value?.animateScrollToItem(data.messageList.value.size - 1)
                                                 }
+
                                             }
                                         })
                                 }
